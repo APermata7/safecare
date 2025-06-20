@@ -21,12 +21,11 @@ return new class extends Migration
             // Data Transaksi
             $table->string('order_id')->unique(); // ID unik dari Midtrans (e.g. "DONASI-123")
             $table->integer('amount'); // Jumlah donasi
-            $table->string('payment_method')->nullable(); // credit_card, bank_transfer, etc
-            $table->enum('status', ['pending', 'success', 'expired', 'failed'])->default('pending');
+            $table->enum('payment_method', ['bank_transfer', 'QRIS'])->nullable();
+            $table->enum('status', ['waiting_confirmation', 'success', 'canceled'])->default('waiting_confirmation'); // Status transaksi
             
             // Data Midtrans
             $table->string('snap_token')->nullable();
-            $table->text('payload')->nullable(); // Response lengkap dari Midtrans (JSON)
             
             $table->timestamps();
             

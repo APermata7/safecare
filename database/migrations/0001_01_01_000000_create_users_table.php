@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('role', ['donatur', 'panti', 'admin'])->default('donatur');
             $table->string('phone')->unique()->nullable();
             $table->string('avatar')->nullable();
+            $table->enum('status', ['active', 'banned'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

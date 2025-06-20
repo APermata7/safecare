@@ -17,8 +17,7 @@ class Transaksi extends Model
         'amount',
         'payment_method',
         'status',
-        'snap_token',
-        'payload'
+        'snap_token'
     ];
 
     /**
@@ -35,26 +34,21 @@ class Transaksi extends Model
      */
     public $incrementing = false;
 
-    // Cast payload (JSON) ke array
-    protected $casts = [
-        'payload' => 'array'
-    ];
-
     // Relasi ke user (donatur)
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relasi ke panti asuhan
     public function panti()
     {
-        return $this->belongsTo(PantiAsuhan::class);
+        return $this->belongsTo(PantiAsuhan::class, 'panti_id');
     }
 
     // Helper: Generate order ID
     public static function generateOrderId()
     {
-        return 'DONASI-' . now()->format('Ymd') . '-' . strtoupper(uniqid());
+        return 'DONASI-' . now()->format('YmdHis') . '-' . substr(md5(uniqid()), 0, 8);
     }
 }

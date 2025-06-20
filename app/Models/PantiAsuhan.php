@@ -33,12 +33,12 @@ class PantiAsuhan extends Model
     // Relasi ke user
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relasi ke transaksi
     public function transaksis()
     {
-        return $this->hasMany(Transaksi::class);
+        return $this->hasMany(Transaksi::class, 'panti_id');
     }
 }

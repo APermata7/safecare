@@ -50,6 +50,14 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        if (Auth::user()->status === 'banned') {
+            Auth::logout(); // pastikan langsung logout
+    
+            throw ValidationException::withMessages([
+                'email' => __('Your account has been banned.'),
+            ]);
+        }
     }
 
     /**

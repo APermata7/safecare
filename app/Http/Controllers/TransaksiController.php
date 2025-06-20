@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use App\Models\Transaksi;
+use App\Models\PantiAsuhan;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
@@ -21,49 +24,66 @@ class TransaksiController extends Controller
             'amount' => 'required|numeric|min:10000'
         ]);
 
-        // Buat transaksi
-        $transaksi = Transaksi::create([
-            'user_id' => auth()->id(),
-            'panti_id' => $request->panti_id,
-            'order_id' => Transaksi::generateOrderId(),
-            'amount' => $request->amount,
-            'status' => 'pending'
-        ]);
+        try {
+            $panti = PantiAsuhan::findOrFail($request->panti_id);
 
-        // Konfigurasi Midtrans
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = false;
-        Config::$isSanitized = true;
+            if ($panti->user_id === auth()->id()) {
+                return response()->json([
+                    'error' => 'Kamu tidak bisa berdonasi ke panti milik sendiri.'
+                ], 403);
+            }
 
-        // Buat parameter pembayaran
-        $params = [
-            'transaction_details' => [
-                'order_id' => $transaksi->order_id,
-                'gross_amount' => $transaksi->amount,
-            ],
-            'customer_details' => [
-                'first_name' => auth()->user()->name,
-                'email' => auth()->user()->email,
-            ],
-            'item_details' => [
-                [
-                    'id' => 'DONASI-' . $transaksi->panti_id,
-                    'price' => $transaksi->amount,
-                    'quantity' => 1,
-                    'name' => 'Donasi untuk ' . $transaksi->panti->nama_panti
+            $transaksi = Transaksi::create([
+                'user_id' => auth()->id(),
+                'panti_id' => $request->panti_id,
+                'order_id' => Transaksi::generateOrderId(),
+                'amount' => $request->amount,
+                'status' => 'waiting_confirmation',
+            ]);
+
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production', false);
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $transaksi->order_id,
+                    'gross_amount' => $transaksi->amount,
+                ],
+                'customer_details' => [
+                    'first_name' => auth()->user()->name,
+                    'email' => auth()->user()->email,
+                    'phone' => auth()->user()->phone,
+                ],
+                'item_details' => [
+                    [
+                        'id' => 'DONASI-' . $transaksi->id,
+                        'price' => $transaksi->amount,
+                        'quantity' => 1,
+                        'name' => 'Donasi untuk ' . $panti->nama_panti,
+                        'category' => 'Donation'
+                    ]
                 ]
-            ]
-        ];
+            ];
 
-        // Generate Snap Token
-        $snapToken = Snap::getSnapToken($params);
+            $snapToken = Snap::getSnapToken($params);
+            $transaksi->update(['snap_token' => $snapToken]);
 
-        // Simpan snap token ke transaksi
-        $transaksi->update(['snap_token' => $snapToken]);
+            return response()->json([
+                'snap_token' => $snapToken,
+                'transaksi' => $transaksi
+            ]);
 
-        return response()->json([
-            'snap_token' => $snapToken,
-            'transaksi' => $transaksi
-        ]);
+        } catch (\Exception $e) {
+            \Log::error('Midtrans Error: '.$e->getMessage());
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat memproses pembayaran'
+            ], 500);
+        }
     }
+
+    // riwayat transaksi yang dikirim user sedang login
+
+    // riwayat transaksi yang diterima panti asuhan
 }
