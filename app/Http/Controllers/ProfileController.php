@@ -3,104 +3,100 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\PantiAsuhan; // Import model PantiAsuhan
+use App\Models\PantiAsuhan;
+use App\Models\User; // Pastikan model User di-import
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage; // Untuk menghapus avatar/foto profil jika ada
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Menampilkan form profil pengguna.
      */
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $pantiAsuhanData = null;
+        $pantiAsuhan = null;
 
-        // Jika role user adalah 'panti', ambil data dari tabel panti_asuhan
         if ($user->role === 'panti') {
-            // Mengambil data panti asuhan yang terkait dengan user_id
-            $pantiAsuhanData = PantiAsuhan::where('user_id', $user->id)->first();
+            // Menggunakan firstOrNew lebih aman, jika data panti belum ada,
+            // ia akan membuat instance baru untuk diisi di form.
+            $pantiAsuhan = PantiAsuhan::firstOrNew(['user_id' => $user->id]);
         }
 
         return view('profile.edit', [
             'user' => $user,
-            'pantiAsuhan' => $pantiAsuhanData, // Mengirim data panti asuhan ke view
+            'pantiAsuhan' => $pantiAsuhan,
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Memperbarui informasi profil pengguna.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Ambil semua data yang sudah lolos validasi dari ProfileUpdateRequest
+        $validatedData = $request->validated();
         $user = $request->user();
 
-        // Mengisi data user dari request yang sudah divalidasi
-        $user->fill($request->validated());
+        // 1. UPDATE DATA USER
+        // Gunakan fill() untuk mengisi data user dari array yang sudah divalidasi
+        $user->fill($validatedData);
 
-        // Jika email berubah, set email_verified_at menjadi null
+        // Jika email diubah, reset status verifikasi
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // Simpan perubahan pada data user
-        $user->save();
-
-        // Jika role user adalah 'panti', perbarui juga data panti asuhan
-        if ($user->role === 'panti') {
-            $pantiAsuhan = PantiAsuhan::where('user_id', $user->id)->first();
-
-            // Jika panti asuhan belum ada, buat yang baru
-            if (!$pantiAsuhan) {
-                $pantiAsuhan = new PantiAsuhan();
-                $pantiAsuhan->user_id = $user->id;
+        // Handle upload avatar PENGGUNA (yang sebelumnya tidak ada)
+        if ($request->hasFile('avatar')) {
+            // Hapus avatar lama jika ada
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
             }
+            // Simpan yang baru dan dapatkan path-nya
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+        }
 
-            // Mengisi data panti asuhan dari request
-            // Pastikan field-field ini ada di $request->validated() atau di request langsung
-            $pantiAsuhan->nama_panti = $request->input('nama_panti');
-            $pantiAsuhan->alamat = $request->input('alamat');
-            $pantiAsuhan->deskripsi = $request->input('deskripsi');
-            $pantiAsuhan->nomor_rekening = $request->input('nomor_rekening');
-            $pantiAsuhan->bank = $request->input('bank');
-            $pantiAsuhan->kontak = $request->input('kontak');
+        $user->save(); // Simpan semua perubahan pada model User
 
-            // Handle upload foto_profil (jika ada)
+        // 2. UPDATE DATA PANTI ASUHAN (JIKA ROLE-NYA 'panti')
+        if ($user->role === 'panti') {
+            // Ambil atau buat instance baru PantiAsuhan
+            $pantiAsuhan = PantiAsuhan::firstOrNew(['user_id' => $user->id]);
+
+            // Gunakan fill() untuk mengisi semua data panti dari array validasi
+            // Ini jauh lebih aman dan ringkas daripada menggunakan $request->input()
+            $pantiAsuhan->fill($validatedData);
+
+            // Handle upload foto profil PANTI
             if ($request->hasFile('foto_profil')) {
-                // Hapus foto profil lama jika ada
                 if ($pantiAsuhan->foto_profil && Storage::disk('public')->exists($pantiAsuhan->foto_profil)) {
                     Storage::disk('public')->delete($pantiAsuhan->foto_profil);
                 }
-                $path = $request->file('foto_profil')->store('panti_asuhan_photos', 'public');
-                $pantiAsuhan->foto_profil = $path;
+                $pantiAsuhan->foto_profil = $request->file('foto_profil')->store('panti_asuhan_photos', 'public');
             }
 
-            // Handle upload dokumen_verifikasi (jika ada dan hanya saat membuat, atau bisa di update sesuai kebutuhan)
-            // Untuk update, mungkin ada validasi khusus atau hanya bisa diupload sekali
-            // Contoh sederhana: Jika file baru diupload, update.
+            // Handle upload dokumen verifikasi PANTI
             if ($request->hasFile('dokumen_verifikasi')) {
                 if ($pantiAsuhan->dokumen_verifikasi && Storage::disk('public')->exists($pantiAsuhan->dokumen_verifikasi)) {
                     Storage::disk('public')->delete($pantiAsuhan->dokumen_verifikasi);
                 }
-                $path = $request->file('dokumen_verifikasi')->store('panti_asuhan_documents', 'public');
-                $pantiAsuhan->dokumen_verifikasi = $path;
+                $pantiAsuhan->dokumen_verifikasi = $request->file('dokumen_verifikasi')->store('panti_asuhan_documents', 'public');
             }
 
-
-            $pantiAsuhan->save();
+            $pantiAsuhan->save(); // Simpan semua perubahan pada model PantiAsuhan
         }
 
-        // Redirect kembali ke halaman edit profile dengan pesan sukses
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Menghapus akun pengguna.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -110,29 +106,28 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // Jika user adalah 'panti', hapus juga data panti asuhan yang terkait
+        // Logout dulu sebelum menghapus data
+        Auth::logout();
+
+        // Hapus data panti asuhan dan filenya jika ada
         if ($user->role === 'panti') {
             $pantiAsuhan = PantiAsuhan::where('user_id', $user->id)->first();
             if ($pantiAsuhan) {
-                // Hapus foto profil dan dokumen verifikasi dari storage
-                if ($pantiAsuhan->foto_profil && Storage::disk('public')->exists($pantiAsuhan->foto_profil)) {
-                    Storage::disk('public')->delete($pantiAsuhan->foto_profil);
-                }
-                if ($pantiAsuhan->dokumen_verifikasi && Storage::disk('public')->exists($pantiAsuhan->dokumen_verifikasi)) {
-                    Storage::disk('public')->delete($pantiAsuhan->dokumen_verifikasi);
-                }
+                if ($pantiAsuhan->foto_profil) Storage::disk('public')->delete($pantiAsuhan->foto_profil);
+                if ($pantiAsuhan->dokumen_verifikasi) Storage::disk('public')->delete($pantiAsuhan->dokumen_verifikasi);
                 $pantiAsuhan->delete();
             }
         }
+
         // Hapus avatar user jika ada
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+        if ($user->avatar) {
             Storage::disk('public')->delete($user->avatar);
         }
 
-        Auth::logout();
-
+        // Hapus user
         $user->delete();
 
+        // Invalidate session dan regenerate token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

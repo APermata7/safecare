@@ -14,6 +14,17 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            olive: {
+
+                DEFAULT: '#73946B',
+
+                hover: '#5e7b58',
+
+                active: '#4b6246',
+
+                ring: '#a3bda1',
+
+            },
         },
     },
 
