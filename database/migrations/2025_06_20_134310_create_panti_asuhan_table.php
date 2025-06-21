@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->string('foto_profil')->nullable();
             $table->string('dokumen_verifikasi');
-            $table->enum('status_verifikasi', ['pending', 'verified', 'rejected'])->default('pending');
+            $table->enum('status_verifikasi', ['verified', 'unverified'])->default('verified');
             $table->string('nomor_rekening')->nullable();
             $table->string('bank')->nullable();
             $table->string('kontak');

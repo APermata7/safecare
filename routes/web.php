@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
     // halaman untuk pengguna melihat profil sendiri, tampilannya beda buat role donatur sama role panti
-    Route::get('/profil', [ProfilController::class, 'index']);
+    // Route::get('/profil', [ProfilController::class, 'index']);
 
     // halaman untuk pengguna mengirim message ke admin
     Route::get('/pesan', [MessageController::class, 'index']);
@@ -54,7 +54,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
 
         // halaman untuk admin manajemen panti asuhan
-        Route::get('/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan');
+        Route::get('/panti', [PantiAsuhanController::class, 'indexAdmin'])->name('admin.panti.index');
+        Route::post('/panti', [PantiAsuhanController::class, 'store'])->name('admin.panti.store');
+        Route::get('/panti/{id}', [PantiAsuhanController::class, 'showAdmin'])->name('admin.panti.show');
+        Route::put('/panti/{id}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
     });
 
     // halaman riwayat transaksi user yang sedang login
