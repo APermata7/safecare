@@ -1,7 +1,6 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{-- Judul akan berubah tergantung role user --}}
             @if ($user->role === 'panti')
                 {{ __('Profil Panti & Akun') }}
             @else
@@ -22,16 +21,7 @@
         @csrf
         @method('patch')
 
-        {{-- ====================================================================== --}}
-        {{-- LOGIKA UTAMA: TAMPILAN BERBEDA UNTUK PANTI DAN USER BIASA           --}}
-        {{-- ====================================================================== --}}
-
         @if ($user->role === 'panti')
-
-            {{-- ====================================================================== --}}
-            {{-- TAMPILAN UNTUK ROLE 'PANTI' (TIDAK DIUBAH)                          --}}
-            {{-- ====================================================================== --}}
-
             {{-- Header Panti --}}
             <div class="relative w-full h-96 rounded-lg shadow-lg overflow-hidden mb-6">
                 @if ($pantiAsuhan && $pantiAsuhan->foto_profil)
@@ -97,20 +87,16 @@
             </div>
 
         @else
-
-            {{-- ====================================================================== --}}
-            {{-- TAMPILAN BARU UNTUK USER BIASA (ROLE BUKAN 'panti')                --}}
-            {{-- ====================================================================== --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-10 pt-4">
 
-                {{-- KOLOM KIRI: FOTO PROFIL --}}
+                {{-- Kolom Kiri --}}
                 <div class="lg:col-span-1">
                     {{-- <h3 class="text-lg font-medium text-gray-900">Foto Profil</h3> --}}
                     {{-- <p class="mt-1 text-sm text-gray-600"> --}}
                     {{--     Tampilkan foto terbaik Anda. --}}
                     {{-- </p> --}}
 
-                    {{-- Tampilan Foto Saat Ini --}}
+                    {{-- Tampilan Foto --}}
                     <div class="mt-6 flex justify-center">
                         @if ($user->avatar)
                             <img src="{{ Storage::url($user->avatar) }}" alt="User Avatar" class="w-48 h-48 object-cover rounded-full shadow-lg">
@@ -130,7 +116,7 @@
                     </div>
                 </div>
 
-                {{-- KOLOM KANAN: DETAIL AKUN --}}
+                {{-- Kolom Kanan --}}
                 <div class="lg:col-span-2">
                     <div class="space-y-6">
                         <div>
@@ -167,17 +153,24 @@
                             <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="tel" />
                             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                         </div>
+
+                    <div>
+                        <x-input-label for="role" :value="__('Role')" />
+                        <x-text-input
+                            id="role"
+                            name="role"
+                            type="text"
+                            class="mt-1 block w-full bg-gray-100 cursor-not-allowed"
+                            :value="ucfirst($user->role)"
+                            disabled
+                        />
+                    </div>
                     </div>
                 </div>
-
             </div>
 
         @endif
-
-
-        {{-- ====================================================================== --}}
-        {{-- TOMBOL SIMPAN (Tampil untuk semua role)                             --}}
-        {{-- ====================================================================== --}}
+        {{-- Tombol Simpan --}}
         <div class="flex items-center gap-4 pt-8 mt-8 border-t border-gray-200">
             <x-primary-button>{{ __('Simpan Perubahan') }}</x-primary-button>
 
