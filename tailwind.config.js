@@ -15,6 +15,11 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
+                'primary-green': '#537D5D',
+                'secondary-green': '#73946B',
+                'light-green': '#9EBC8A',
+                'beige-tone': '#D2D0A0',
+
                 olive: {
                     DEFAULT: '#73946B',
                     hover: '#5e7b58',
