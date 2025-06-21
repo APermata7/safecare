@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PantiAsuhanController;
 use App\Http\Controllers\TransaksiController;
@@ -25,14 +26,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
+    // halaman untuk pengguna melihat profil sendiri
+    Route::get('/profil', [ProfilController::class, 'index']);
+
+    // halaman untuk pengguna mengirim message ke admin
+    Route::get('/pesan', [MessageController::class, 'index']);
+    Route::get('/pesan/{id}', [MessageController::class, 'show']);
+    Route::post('/pesan', [MessageController::class, 'store']);
+
     // user management for admin only
     Route::prefix('admin')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('admin');
-        Route::put('/{id}/ban', [UserController::class, 'ban']);
-        Route::put('/{id}/unban', [UserController::class, 'unban']);
-        Route::delete('/{id}', [UserController::class, 'destroy']);
-        Route::put('/{id}/role', [UserController::class, 'updateRole']);
+        // halaman /admin untuk melihat pesan masuk dari donatur/panti untuk admin
+        Route::get('/', [MessageController::class, 'adminIndex']);
+        Route::get('/{id}', [MessageController::class, 'show']);
+        Route::put('/pesan/{id}/reply', [MessageController::class, 'reply']);
+
+        // halaman /admin/users, management user
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users');
+        Route::put('/users/{id}/ban', [UserController::class, 'ban'])->name('ban');
+        Route::put('/users/{id}/unban', [UserController::class, 'unban'])->name('unban');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('delete.user');
+
+        // halaman /admin/client untuk update donatur ke panti
+        // sekali menjadi panti, tidak bisa kembali menjadi role donatur
+        Route::get('/client', [UserController::class, 'getDonatorOnly'])->name('admin');
+        Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
     });
+
+    
 });
 
 require __DIR__.'/auth.php';

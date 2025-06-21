@@ -31,6 +31,26 @@ class UserController extends Controller
         ]);
     }
 
+    public function getDonatorOnly()
+    {
+        $users = User::select('id', 'name', 'email', 'avatar', 'role', 'status')
+            ->orderBy('created_at', 'asc')->where('role', '==', 'donatur')
+            ->get();
+
+        // Mengubah path avatar menjadi URL yang dapat diakses
+        $users->transform(function ($user) {
+            if ($user->avatar) {
+                $user->avatar = Storage::url($user->avatar);
+            }
+            return $user;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $users
+        ]);
+    }
+
     /**
      * Melakukan ban pada user
      */
@@ -119,12 +139,12 @@ class UserController extends Controller
     }
 
     /**
-     * Mengubah role dari donatur ke panti atau sebaliknya
+     * Mengubah role dari donatur ke panti
      */
     public function updateRole(Request $request, $id)
     {
         $request->validate([
-            'role' => 'required|in:donatur,panti'
+            'role' => 'required|in:donatur'
         ]);
 
         $user = User::find($id);
@@ -136,11 +156,18 @@ class UserController extends Controller
             ], 404);
         }
 
+        if ($user->role === 'panti') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak dapat mengubah role panti'
+            ], 404);
+        }
+
         if ($user->role === 'admin') {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak dapat mengubah role admin'
-            ], 403);
+            ], 404);
         }
 
         $user->role = $request->role;
