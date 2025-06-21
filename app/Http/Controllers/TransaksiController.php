@@ -38,7 +38,7 @@ class TransaksiController extends Controller
                 'panti_id' => $request->panti_id,
                 'order_id' => Transaksi::generateOrderId(),
                 'amount' => $request->amount,
-                'status' => 'waiting_confirmation',
+                'status' => 'waiting confirmation',
             ]);
 
             Config::$serverKey = config('midtrans.server_key');
