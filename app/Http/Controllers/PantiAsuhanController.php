@@ -33,36 +33,45 @@ class PantiAsuhanController extends Controller
      * Menampilkan detail lengkap panti asuhan
      */
     public function show($id)
-    {
-        $panti = PantiAsuhan::with(['user:id,avatar'])
-            ->findOrFail($id);
+        {
+            // 1. PERBAIKAN: Tambahkan 'name' ke dalam eager loading relasi user
+            $panti = PantiAsuhan::with(['user:id,name,avatar'])
+                ->findOrFail($id);
 
-        $riwayatTransaksi = [];
-        
-        $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
-            ->where('panti_id', $id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-        
-        $pantiData = [
-            'id' => $panti->id,
-            'nama_panti' => $panti->nama_panti,
-            'alamat' => $panti->alamat,
-            'deskripsi' => $panti->deskripsi,
-            'foto_profil_url' => $panti->foto_profil ? asset('storage/' . $panti->foto_profil) : null,
-            'kontak' => $panti->kontak,
-            'status_verifikasi' => $panti->status_verifikasi,
-            'user_id' => $panti->user_id,
-            'user' => [
-                'avatar_url' => $panti->user->avatar ? asset('storage/' . $panti->user->avatar) : null,
-            ]
-        ];
+            $riwayatTransaksi = [];
 
-        return view('panti-show', [
-            'panti' => $pantiData,
-            'riwayatTransaksi' => $riwayatTransaksi
-        ]);
-    }
+            // Cek jika ada user yang login sebelum mengambil riwayat
+            if (auth()->check()) {
+                $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
+                    ->where('panti_id', $id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+
+            $pantiData = [
+                'id' => $panti->id,
+                'nama_panti' => $panti->nama_panti,
+                'alamat' => $panti->alamat,
+                'deskripsi' => $panti->deskripsi,
+                'foto_profil_url' => $panti->foto_profil ? asset('storage/' . $panti->foto_profil) : null,
+                'kontak' => $panti->kontak,
+                'status_verifikasi' => $panti->status_verifikasi,
+                'user_id' => $panti->user_id,
+                'user' => [
+                    // 2. PERBAIKAN: Tambahkan 'name' ke data user
+                    'name' => $panti->user->name ?? 'N/A',
+                    'avatar_url' => $panti->user->avatar ? asset('storage/' . $panti->user->avatar) : null,
+                ],
+
+                // 3. PERBAIKAN UTAMA: Tambahkan kunci 'dokumen_verifikasi_url' yang hilang
+                'dokumen_verifikasi_url' => $panti->dokumen_verifikasi ? asset('storage/' . $panti->dokumen_verifikasi) : null,
+            ];
+
+            return view('panti-show', [
+                'panti' => $pantiData,
+                'riwayatTransaksi' => $riwayatTransaksi
+            ]);
+        }
 
     /**
      * menampilkan daftar panti asuhan untuk admin,
