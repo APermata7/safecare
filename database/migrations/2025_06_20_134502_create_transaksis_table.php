@@ -15,8 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             
             // Relasi
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade'); // Donatur
-            $table->foreignUuid('panti_id')->constrained('panti_asuhan')->onDelete('cascade'); // Panti tujuan
+            $table->foreignUuid('user_id')->constrained()->onDelete('set null'); // Donatur
+            $table->foreignUuid('panti_id')->constrained('panti_asuhan')->onDelete('set null'); // Panti tujuan
             
             // Data Transaksi
             $table->string('order_id')->unique(); // ID unik dari Midtrans (e.g. "DONASI-123")

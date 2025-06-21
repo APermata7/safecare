@@ -38,13 +38,11 @@ class PantiAsuhanController extends Controller
 
         $riwayatTransaksi = [];
         
-        if (auth()->check() && auth()->user()->role === 'donatur') {
-            $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
-                ->where('panti_id', $id)
-                ->orderBy('created_at', 'desc')
-                ->get();
-        }
-
+        $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
+            ->where('panti_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
         $pantiData = [
             'id' => $panti->id,
             'nama_panti' => $panti->nama_panti,

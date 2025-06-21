@@ -51,6 +51,25 @@ class UserController extends Controller
         ]);
     }
 
+    public function getPantiAsuhanList()
+    {
+        $users = User::select('id', 'name', 'email', 'avatar', 'role', 'status')
+            ->orderBy('created_at', 'asc')->where('role', '==', 'panti')
+            ->get();
+
+        $users->transform(function ($user) {
+            if ($user->avatar) {
+                $user->avatar = Storage::url($user->avatar);
+            }
+            return $user;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $users
+        ]);
+    }
+
     /**
      * Melakukan ban pada user
      */

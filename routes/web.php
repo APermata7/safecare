@@ -50,7 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // halaman /admin/client untuk update donatur ke panti
         // sekali menjadi panti, tidak bisa kembali menjadi role donatur
         Route::get('/client', [UserController::class, 'getDonatorOnly'])->name('admin');
+        Route::get('/client/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan');
         Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
+
+        // halaman untuk admin manajemen panti asuhan
+        Route::get('/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan');
     });
 
     // halaman riwayat transaksi user yang sedang login
