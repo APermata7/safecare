@@ -1,22 +1,15 @@
 <x-app-layout>
-    {{-- Slot header bawaan tidak kita gunakan lagi --}}
-
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            {{-- ====================================================================== --}}
-            {{-- BAGIAN HEADER BARU                                                   --}}
-            {{-- ====================================================================== --}}
             <div class="relative flex items-center justify-center mb-8">
 
-                {{-- Tombol Kembali di Kiri --}}
-                {{-- Ganti route('dashboard') dengan route yang benar menuju halaman daftar panti --}}
+                {{-- Tombol Kembali --}}
                 <a href="{{ route('dashboard') }}"
                    class="absolute left-0 flex items-center justify-center w-16 h-12 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
 
-                {{-- Judul Halaman di Tengah (dibuat lebih kecil & rounded) --}}
+                {{-- Judul Halaman --}}
                 <h2 class="font-semibold text-lg text-gray-700 bg-white shadow-sm rounded-full px-8 py-3">
                     Detail Panti Asuhan
                 </h2>
@@ -34,12 +27,8 @@
                 </div>
             @endif
 
-
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl">
-
-                {{-- PERUBAHAN: Judul yang sebelumnya ada di sini, sekarang sudah dipindahkan ke atas --}}
-
-                {{-- Bagian Header Visual Panti --}}
+                {{-- Header Visual Panti --}}
                 <div class="relative w-full h-96 bg-gray-200">
                     @if($panti['foto_profil_url'])
                         <img src="{{ $panti['foto_profil_url'] }}" alt="Foto Profil {{ $panti['nama_panti'] }}" class="w-full h-full object-cover">
@@ -170,7 +159,7 @@
     </div>
 
 
-    {{-- Modal dan Javascript (TIDAK ADA PERUBAHAN) --}}
+    {{-- Modal dan Javascript --}}
     <div id="documentModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b">
