@@ -51,7 +51,7 @@ class PantiAsuhanController extends Controller
             'alamat' => $panti->alamat,
             'deskripsi' => $panti->deskripsi,
             'foto_profil_url' => $panti->foto_profil ? asset('storage/' . $panti->foto_profil) : null,
-            'dokumen_verifikasi' => $panti->dokumen_verifikasi ? asset('storage/' . $panti->dokumen_verifikasi) : null,
+            'dokumen_verifikasi_url' => $panti->dokumen_verifikasi ? asset('storage/' . $panti->dokumen_verifikasi) : null,
             'kontak' => $panti->kontak,
             'status_verifikasi' => $panti->status_verifikasi,
             'user_id' => $panti->user_id,
