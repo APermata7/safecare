@@ -86,4 +86,11 @@ class TransaksiController extends Controller
     // riwayat transaksi yang dikirim user sedang login
 
     // riwayat transaksi yang diterima panti asuhan
+
+    // transaksi si admin
+    // get all transactions
+
+    // update status transaksi
+    // klo udh selesai transfer ke panti, update status jadi success
+
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('panti_asuhan', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained()->onDelete('set null');
+            $table->foreignUuid('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('nama_panti');
             $table->text('alamat');
             $table->text('deskripsi')->nullable();
