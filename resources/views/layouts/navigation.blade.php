@@ -15,7 +15,6 @@
                               {{ request()->routeIs('dashboard') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
                         {{ __('Dashboard') }}
                     </a>
-                    {{-- Tambahkan link lain di sini dengan pola yang sama --}}
                 </div>
             </div>
 
