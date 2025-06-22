@@ -39,7 +39,7 @@ class UserPantiSeeder extends Seeder
             'avatar' => $this->storeAvatar('dummy_files/avatars/donatur2.jpg', 'donatur2.jpg')
         ]);
 
-        // Buat user panti asuhan
+        // Buat user panti asuhan 1
         $userPanti = User::create([
             'name' => 'Pengurus Panti',
             'email' => 'panti@gmail.com',
@@ -49,7 +49,7 @@ class UserPantiSeeder extends Seeder
             'avatar' => $this->storeAvatar('dummy_files/avatars/pengurus.jpg', 'pengurus.jpg')
         ]);
 
-        // Buat data panti asuhan
+        // Buat data panti asuhan 1
         PantiAsuhan::create([
             'user_id' => $userPanti->id,
             'nama_panti' => 'Panti Asuhan Lidwina',
@@ -60,7 +60,55 @@ class UserPantiSeeder extends Seeder
             'status_verifikasi' => 'verified',
             'nomor_rekening' => '1234567890',
             'bank' => 'BCA',
-            'kontak' => '08123456789'
+            'kontak' => '08123456789 / argenta@gmail.com'
+        ]);
+
+        // Buat user panti asuhan 2
+        $userPanti = User::create([
+            'name' => 'Hayao Miyazaki',
+            'email' => 'hayao@gmail.com',
+            'password' => Hash::make('rahasia1'),
+            'role' => 'panti',
+            'phone' => '08123456789',
+            'avatar' => $this->storeAvatar('dummy_files/avatars/hayao.png', 'hayao.png')
+        ]);
+
+        // Buat data panti asuhan 2
+        PantiAsuhan::create([
+            'user_id' => $userPanti->id,
+            'nama_panti' => 'Panti Asuhan Hayao',
+            'alamat' => 'Jl. H. Djuanda No. 255, Jawa Barat',
+            'deskripsi' => 'Panti asuhan anak yatim piatu',
+            'foto_profil' => $this->storePantiImage('dummy_files/panti_images/panti2.jpg', 'panti2.jpg'),
+            'dokumen_verifikasi' => $this->storeDocument('dummy_files/documents/portfolio1.pdf', 'portfolio1.pdf'),
+            'status_verifikasi' => 'verified',
+            'nomor_rekening' => '9876543321',
+            'bank' => 'BRI',
+            'kontak' => '08123456789 / hayao@gmail.com'
+        ]);
+
+        // Buat user panti asuhan 3
+        $userPanti = User::create([
+            'name' => 'Minecraft Steve',
+            'email' => 'steve@gmail.com',
+            'password' => Hash::make('rahasia1'),
+            'role' => 'panti',
+            'phone' => '0812234556789',
+            'avatar' => $this->storeAvatar('dummy_files/avatars/steve.png', 'steve.png')
+        ]);
+
+        // Buat data panti asuhan 3
+        PantiAsuhan::create([
+            'user_id' => $userPanti->id,
+            'nama_panti' => 'Panti Asuhan Steve',
+            'alamat' => 'Jl. Veteran No. 555, Jawa Timur',
+            'deskripsi' => 'Panti asuhan anak piatu dan yatim',
+            'foto_profil' => $this->storePantiImage('dummy_files/panti_images/panti3.jpg', 'panti3.jpg'),
+            'dokumen_verifikasi' => $this->storeDocument('dummy_files/documents/portfolio2.pdf', 'portfolio2.pdf'),
+            'status_verifikasi' => 'verified',
+            'nomor_rekening' => '987654332111',
+            'bank' => 'BNI',
+            'kontak' => '0812234556789 / steve@gmail.com'
         ]);
 
         // Buat user admin
@@ -74,10 +122,12 @@ class UserPantiSeeder extends Seeder
         ]);
 
         $this->command->info('Seeder berhasil dijalankan!');
-        $this->command->info('Email: test@gmail.com | Password: rahasia1 (Donatur)');
-        $this->command->info('Email: lidwina@gmail.com | Password: rahasia1 (Donatur)');
-        $this->command->info('Email: panti@gmail.com | Password: rahasia1 (Panti)');
-        $this->command->info('Email: admin@gmail.com | Password: rahasia1 (Admin)');
+        $this->command->info('Email: test@gmail.com     | Password: rahasia1 (Donatur)');
+        $this->command->info('Email: lidwina@gmail.com  | Password: rahasia1 (Donatur)');
+        $this->command->info('Email: panti@gmail.com    | Password: rahasia1 (Panti)');
+        $this->command->info('Email: hayao@gmail.com    | Password: rahasia1 (Panti)');
+        $this->command->info('Email: steve@gmail.com    | Password: rahasia1 (Panti)');
+        $this->command->info('Email: admin@gmail.com    | Password: rahasia1 (Admin)');
     }
 
     /**
