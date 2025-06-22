@@ -23,7 +23,8 @@ return new class extends Migration
             $table->integer('amount'); // Jumlah donasi
             $table->enum('payment_method', ['bank transfer', 'QRIS'])->nullable();
             $table->enum('status', ['waiting confirmation', 'success', 'canceled'])->default('waiting confirmation'); // Status transaksi
-            
+            $table->boolean('hide_name')->default(false);
+
             // Data Midtrans
             $table->string('snap_token')->nullable();
             

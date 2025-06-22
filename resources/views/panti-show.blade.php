@@ -68,12 +68,13 @@
                                 <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-3">Deskripsi Panti</h3>
                                 <p class="text-gray-700 whitespace-pre-line">{{ $panti['deskripsi'] ?? 'Tidak ada deskripsi.' }}</p>
                             </div>
+                            
                             <div>
                                 <h4 class="font-semibold text-gray-600 flex items-center"><i class="fa-solid fa-map-location-dot mr-2 text-primary-green"></i>Alamat</h4>
                                 <p class="mt-1 text-gray-800">{{ $panti['alamat'] }}</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-gray-600 flex items-center"><i class="fa-solid fa-phone mr-2 text-primary-green"></i>Kontak</h4>
+                                <h4 class="font-semibold text-gray-600 flex items-center"><i class="fa-solid fa-address-book mr-2 text-primary-green"></i>Kontak</h4>
                                 <p class="mt-1 text-gray-800">{{ $panti['kontak'] }}</p>
                             </div>
                             @if(isset($panti['dokumen_verifikasi_url']) && $panti['dokumen_verifikasi_url'])
@@ -110,6 +111,19 @@
                                                               sm:text-sm" required>
                                                 @error('amount') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                                             </div>
+
+                                            {{-- Checkbox untuk menyembunyikan nama --}}
+                                            <div class="mt-3 flex items-center">
+                                                <input type="checkbox" id="hide_name" name="hide_name" value="1"
+                                                    class="h-4 w-4 rounded border-gray-300 text-primary-green focus:ring-primary-green">
+                                                <label for="hide_name" class="ml-2 block text-sm text-gray-700 flex items-center">
+                                                    <span>Sembunyikan nama saya (donasi anonim)</span>
+                                                    <span class="ml-1 text-primary-green" title="Nama Anda tidak akan ditampilkan di riwayat donasi panti">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </span>
+                                                </label>
+                                            </div>
+
                                             <button type="submit"
                                                     class="mt-4 w-full inline-flex justify-center items-center px-4 py-2
                                                            bg-secondary-green border border-transparent rounded-xl font-semibold
@@ -132,10 +146,10 @@
                                                             <p class="text-xs text-gray-500">ID: {{ $transaksi->order_id }}</p>
                                                         </div>
                                                         <div class="text-right">
-                                                            <p class="font-bold text-primary-green">Rp {{ number_format($transaksi->amount, 0, ',', '.') }}</p>
+                                                            <p class="font-bold text-primary-green">Rp{{ number_format($transaksi->amount, 0, ',', '.') }}</p>
                                                             <span class="px-2 py-0.5 text-xs font-semibold rounded-full
-                                                                @if($transaksi->status === 'done') bg-green-100 text-green-800
-                                                                @elseif($transaksi->status === 'pending') bg-yellow-100 text-yellow-800
+                                                                @if($transaksi->status === 'success') bg-green-100 text-green-800
+                                                                @elseif($transaksi->status === 'waiting confirmation') bg-yellow-100 text-yellow-800
                                                                 @else bg-red-100 text-red-800 @endif">
                                                                 {{ strtoupper($transaksi->status) }}
                                                             </span>
@@ -155,9 +169,19 @@
                    </div>
                 </div>
             </div>
+
+            {{-- Card Riwayat Donasi Panti --}}
+            <div class="bg-white overflow-hidden shadow-sm rounded-2xl mt-8 mb-12">
+                <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-3 m-6">Riwayat Donasi Diterima: {{ $panti['nama_panti'] }}</h3>
+                <div id="totalAmountDonasi" class="ml-6 mb-2 text-base text-primary-green font-semibold"></div>
+                <div id="donationHistoryContainer">
+                    <div class="text-center py-6 border-2 border-dashed rounded-lg m-6">
+                        <p class="text-sm text-gray-500">Memuat riwayat donasi...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 
     {{-- Modal dan Javascript --}}
     <div id="documentModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
@@ -174,8 +198,95 @@
             </div>
         </div>
     </div>
+    
+    {{-- Script untuk Memuat Riwayat Donasi Panti --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Fungsi untuk memformat angka ke Rupiah
+            function formatRupiah(amount) {
+                return 'Rp' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            // Fungsi untuk memuat riwayat donasi panti
+            function loadPantiDonationHistory() {
+                const pantiId = '{{ $panti["id"] }}';
+                const container = document.getElementById('donationHistoryContainer');
+                
+                axios.get(`/panti-asuhan/${pantiId}/history`)
+                    .then(response => {
+                        const transactions = response.data.data;
+                        const totalAmount = response.data.total_amount; // Ambil total amount
+                        // Tampilkan total amount
+                        document.getElementById('totalAmountDonasi').innerHTML = 
+                            `Total Donasi Terkumpul: <span class="font-bold">${totalAmount ? 'Rp' + totalAmount : 'Rp0'}</span>`;
+                            
+                        if (transactions.length === 0) {
+                            container.innerHTML = `
+                                <div class="text-center py-6 border-2 border-dashed rounded-lg m-6">
+                                    <p class="text-sm text-gray-500">Belum ada riwayat donasi untuk panti ini.</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        let html = '<div class="space-y-3 max-h-[500px] overflow-y-auto pr-2 m-6">';
+                        
+                        transactions.forEach(transaksi => {
+                            // Tentukan warna status
+                            let statusColor = 'bg-gray-100 text-gray-800';
+                            if (transaksi.status === 'success') {
+                                statusColor = 'bg-green-100 text-green-800';
+                            } else if (transaksi.status === 'canceled') {
+                                statusColor = 'bg-red-100 text-red-800';
+                            } else if (transaksi.status === 'waiting confirmation') {
+                                statusColor = 'bg-yellow-100 text-yellow-800';
+                            }
+                            
+                            html += `
+                                <div class="p-4 bg-white rounded-2xl border shadow-sm hover:shadow-md transition">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Oleh: ${transaksi.donatur_name}</p>
+                                            <p class="text-xs text-gray-500">${transaksi.donatur_email}</p>
+                                        </div>
+                                        <p class="font-bold text-primary-green">${formatRupiah(transaksi.amount.replace('.', ''))}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">
+                                            <p class="text-gray-600">${transaksi.created_at}</p>
+                                            <p class="text-xs text-gray-500">ID: ${transaksi.order_id}</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusColor} uppercase">
+                                            ${transaksi.status}
+                                        </span>
+                                    </div>
+                                    ${transaksi.payment_method ? `
+                                    <div class="mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-${transaksi.payment_method === 'bank transfer' ? 'university' : 'qrcode'} mr-1"></i>
+                                        ${transaksi.payment_method === 'bank transfer' ? 'Transfer Bank' : 'QRIS'}
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                        container.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error loading donation history:', error);
+                        container.innerHTML = `
+                            <div class="text-center py-6 border-2 border-dashed rounded-lg">
+                                <p class="text-sm text-red-500">Gagal memuat riwayat donasi. Silakan coba lagi.</p>
+                            </div>
+                        `;
+                    });
+            }
+            
+            // Panggil fungsi saat halaman dimuat
+            loadPantiDonationHistory();
+
+            // Modal handler (existing code)
             const modalToggles = document.querySelectorAll('[data-modal-toggle]');
             const modalCloses = document.querySelectorAll('[data-modal-close]');
             modalToggles.forEach(button => {
@@ -227,6 +338,7 @@
             }
         });
     </script>
+    
     @auth
         @if(auth()->user()->id !== $panti['user_id'])
             <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
@@ -247,7 +359,8 @@
                             },
                             body: JSON.stringify({
                                 panti_id: this.panti_id.value,
-                                amount: this.amount.value
+                                amount: this.amount.value,
+                                hide_name: this.hide_name.checked ? 1 : 0
                             })
                         })
                         .then(response => {

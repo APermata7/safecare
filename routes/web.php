@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/panti-asuhan', [PantiAsuhanController::class, 'index']);
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
+    Route::get('/panti-asuhan/{id}/history', [TransaksiController::class, 'showHistoryPanti'])->name('panti.history');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
     // halaman untuk pengguna melihat profil sendiri, tampilannya beda buat role donatur sama role panti

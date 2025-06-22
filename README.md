@@ -1,6 +1,6 @@
 # SafeCare
 
-Aplikasi crowdfunding panti asuhan...
+Aplikasi crowdfunding untuk panti asuhan...
 
 ## Langkah Instalasi
 
@@ -11,7 +11,9 @@ cd safecare
 cp .env.example .env
 
 php artisan migrate:fresh --seed
-php artisan storage:link
 php artisan key:generate
+php artisan storage:link
+
+npm run dev
 php artisan serve
 ```
