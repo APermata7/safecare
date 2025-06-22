@@ -11,24 +11,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [PantiAsuhanController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/panti-asuhan', [PantiAsuhanController::class, 'index']);
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
     Route::get('/panti-asuhan/{id}/history', [TransaksiController::class, 'showHistoryPanti'])->name('panti.history');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
-
-    // halaman untuk pengguna melihat profil sendiri, tampilannya beda buat role donatur sama role panti
-    // Route::get('/profil', [ProfilController::class, 'index']);
 
     // halaman untuk pengguna mengirim message ke admin
     Route::get('/pesan', [MessageController::class, 'index']);
@@ -38,9 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // user management for admin only
     Route::middleware('admin')->prefix('admin')->group(function () {
         // halaman /admin untuk melihat pesan masuk dari donatur/panti untuk admin
-        Route::get('/', [MessageController::class, 'adminIndex']);
-        Route::get('/{id}', [MessageController::class, 'show']);
-        Route::put('/pesan/{id}/reply', [MessageController::class, 'reply']);
+        Route::get('/', [MessageController::class, 'adminIndex'])->name('admin.index');
+        Route::get('/{id}', [MessageController::class, 'show'])->name('admin.show');
+        Route::put('/{id}/reply', [MessageController::class, 'reply'])->name('admin.reply');
 
         // halaman /admin/users, management user
         Route::get('/users', [UserController::class, 'index'])->name('admin.users');
@@ -51,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // halaman /admin/client untuk update donatur ke panti
         // sekali menjadi panti, tidak bisa kembali menjadi role donatur
         Route::get('/client', [UserController::class, 'getDonatorOnly'])->name('admin');
-        Route::get('/client/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan');
+        Route::get('/client/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan')->name('get.panti');
         Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
 
         // halaman untuk admin manajemen panti asuhan
