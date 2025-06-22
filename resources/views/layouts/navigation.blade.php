@@ -10,11 +10,28 @@
 
             <div class="flex-1 hidden sm:flex items-center justify-center">
                 <div class="flex space-x-2 p-1 bg-gray-100 rounded-full">
+                    {{-- Dashboard --}}
                     <a href="{{ route('dashboard') }}"
-                       class="px-4 py-2 text-sm font-semibold rounded-full transition
+                        class="px-4 py-2 text-sm font-semibold rounded-full transition
                               {{ request()->routeIs('dashboard') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
                         {{ __('Dashboard') }}
                     </a>
+
+                    {{-- Riwayat Donasi Saya --}}
+                    <a href="{{ route('donasi.riwayat') }}"
+                        class="px-4 py-2 text-sm font-semibold rounded-full transition
+                              {{ request()->routeIs('donasi.riwayat') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
+                        {{ __('Riwayat Donasi') }}
+                    </a>
+
+                    {{-- Riwayat Donasi Diterima (Panti) --}}
+                    @can('view-panti-history')
+                         <a href="{{ route('panti.donasi.diterima') }}"
+                              class="px-4 py-2 text-sm font-semibold rounded-full transition
+                                     {{ request()->routeIs('panti.donasi.diterima') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
+                              {{ __('Donasi Diterima') }}
+                         </a>
+                    @endcan
                 </div>
             </div>
 

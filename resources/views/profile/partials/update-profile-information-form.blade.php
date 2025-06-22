@@ -72,6 +72,17 @@
                         <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                     </div>
                     <div>
+                        <x-input-label for="role" :value="__('Role')" />
+                        <x-text-input
+                            id="role"
+                            name="role"
+                            type="text"
+                            class="mt-1 block w-full bg-gray-100 cursor-not-allowed rounded-xl"
+                            :value="ucfirst($user->role)"
+                            disabled
+                        />
+                    </div>
+                    <div>
                         <x-input-label for="avatar" :value="__('User Avatar')" />
                         <input id="avatar" name="avatar" type="file" class="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-primary-green hover:file:bg-gray-200" accept="image/*"/>
                         <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
