@@ -60,10 +60,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/panti/{id}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
     });
 
+    // ROUTE SEMENTARA UNTUK DEVELOPMENT FRONTEND
+    // Halaman Riwayat Donasi Saya
+    Route::get('/riwayat-donasi-dev', function () {
+        return view('donasi.riwayat');
+    })->name('donasi.riwayat');
+
+    // Halaman Donasi Diterima (Khusus Panti)
+    Route::get('/panti/donasi-diterima-dev', function () {
+        return view('panti.donasi-diterima');
+    })->name('panti.donasi.diterima');
+
     // halaman riwayat transaksi user yang sedang login
     // tambahin fungsi buat ini di TransaksiController jal
     // halaman riwayat transaksi yang telah diterima panti
-    
+
 });
 
 require __DIR__.'/auth.php';

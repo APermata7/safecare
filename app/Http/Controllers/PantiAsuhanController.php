@@ -35,15 +35,17 @@ class PantiAsuhanController extends Controller
      */
     public function show($id)
     {
-        $panti = PantiAsuhan::with(['user:id,avatar'])
-            ->findOrFail($id);
+        $panti = PantiAsuhan::with(['user:id,name,avatar'])
+                ->findOrFail($id);
 
         $riwayatTransaksi = [];
         
-        $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
-            ->where('panti_id', $id)
-            ->orderBy('created_at', 'desc')
-            ->get();
+            if (auth()->check()) {
+                $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
+                    ->where('panti_id', $id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
         
         $pantiData = [
             'id' => $panti->id,
@@ -56,15 +58,16 @@ class PantiAsuhanController extends Controller
             'status_verifikasi' => $panti->status_verifikasi,
             'user_id' => $panti->user_id,
             'user' => [
+                'name' => $panti->user->name,
                 'avatar_url' => $panti->user->avatar ? asset('storage/' . $panti->user->avatar) : null,
             ]
         ];
 
-        return view('panti-show', [
-            'panti' => $pantiData,
-            'riwayatTransaksi' => $riwayatTransaksi
-        ]);
-    }
+            return view('panti-show', [
+                'panti' => $pantiData,
+                'riwayatTransaksi' => $riwayatTransaksi
+            ]);
+        }
 
     /**
      * menampilkan daftar panti asuhan untuk admin,
