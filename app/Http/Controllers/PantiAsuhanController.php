@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PantiAsuhan;
 use App\Models\Transaksi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,39 +34,34 @@ class PantiAsuhanController extends Controller
      * Menampilkan detail lengkap panti asuhan
      */
     public function show($id)
-        {
-            // 1. PERBAIKAN: Tambahkan 'name' ke dalam eager loading relasi user
-            $panti = PantiAsuhan::with(['user:id,name,avatar'])
+    {
+        $panti = PantiAsuhan::with(['user:id,name,avatar'])
                 ->findOrFail($id);
 
-            $riwayatTransaksi = [];
-
-            // Cek jika ada user yang login sebelum mengambil riwayat
+        $riwayatTransaksi = [];
+        
             if (auth()->check()) {
                 $riwayatTransaksi = Transaksi::where('user_id', auth()->id())
                     ->where('panti_id', $id)
                     ->orderBy('created_at', 'desc')
                     ->get();
             }
-
-            $pantiData = [
-                'id' => $panti->id,
-                'nama_panti' => $panti->nama_panti,
-                'alamat' => $panti->alamat,
-                'deskripsi' => $panti->deskripsi,
-                'foto_profil_url' => $panti->foto_profil ? asset('storage/' . $panti->foto_profil) : null,
-                'kontak' => $panti->kontak,
-                'status_verifikasi' => $panti->status_verifikasi,
-                'user_id' => $panti->user_id,
-                'user' => [
-                    // 2. PERBAIKAN: Tambahkan 'name' ke data user
-                    'name' => $panti->user->name ?? 'N/A',
-                    'avatar_url' => $panti->user->avatar ? asset('storage/' . $panti->user->avatar) : null,
-                ],
-
-                // 3. PERBAIKAN UTAMA: Tambahkan kunci 'dokumen_verifikasi_url' yang hilang
-                'dokumen_verifikasi_url' => $panti->dokumen_verifikasi ? asset('storage/' . $panti->dokumen_verifikasi) : null,
-            ];
+        
+        $pantiData = [
+            'id' => $panti->id,
+            'nama_panti' => $panti->nama_panti,
+            'alamat' => $panti->alamat,
+            'deskripsi' => $panti->deskripsi,
+            'foto_profil_url' => $panti->foto_profil ? asset('storage/' . $panti->foto_profil) : null,
+            'dokumen_verifikasi_url' => $panti->dokumen_verifikasi ? asset('storage/' . $panti->dokumen_verifikasi) : null,
+            'kontak' => $panti->kontak,
+            'status_verifikasi' => $panti->status_verifikasi,
+            'user_id' => $panti->user_id,
+            'user' => [
+                'name' => $panti->user->name,
+                'avatar_url' => $panti->user->avatar ? asset('storage/' . $panti->user->avatar) : null,
+            ]
+        ];
 
             return view('panti-show', [
                 'panti' => $pantiData,
@@ -145,15 +141,15 @@ class PantiAsuhanController extends Controller
             'nama_panti' => 'required|string|max:255',
             'alamat' => 'required|string',
             'deskripsi' => 'nullable|string',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'dokumen_verifikasi' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:16384',
+            'dokumen_verifikasi' => 'required|file|mimes:pdf,jpeg,png,jpg|max:16384', // Maksimal 16MB
             'nomor_rekening' => 'nullable|string|max:255',
             'bank' => 'nullable|string|max:255',
             'kontak' => 'required|string|max:255',
         ]);
 
         // Cek apakah user memiliki role panti
-        $user = \App\Models\User::findOrFail($validated['user_id']);
+        $user = User::findOrFail($validated['user_id']);
         if ($user->role !== 'panti') {
             return response()->json([
                 'message' => 'Hanya user dengan role panti yang dapat membuat data panti asuhan'
