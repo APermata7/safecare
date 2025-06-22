@@ -10,6 +10,10 @@ cd safecare
 
 cp .env.example .env
 
+composer install
+npm install
+npm run build
+
 php artisan migrate:fresh --seed
 php artisan storage:link
 php artisan key:generate

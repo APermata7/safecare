@@ -33,22 +33,12 @@ class UserController extends Controller
 
     public function getDonatorOnly()
     {
-        $users = User::select('id', 'name', 'email', 'avatar', 'role', 'status')
-            ->orderBy('created_at', 'asc')->where('role', '==', 'donatur')
+        $donaturs = User::where('role', 'donatur')
+            ->select('id', 'name', 'email', 'avatar', 'role', 'banned')
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        // Mengubah path avatar menjadi URL yang dapat diakses
-        $users->transform(function ($user) {
-            if ($user->avatar) {
-                $user->avatar = Storage::url($user->avatar);
-            }
-            return $user;
-        });
-
-        return response()->json([
-            'success' => true,
-            'data' => $users
-        ]);
+        return view('admin.users.donaturs', compact('donaturs'));
     }
 
     public function getPantiAsuhanList()
@@ -160,46 +150,16 @@ class UserController extends Controller
     /**
      * Mengubah role dari donatur ke panti
      */
-    public function updateRole(Request $request, $id)
+    public function updateRole($id)
     {
-        $request->validate([
-            'role' => 'required|in:donatur'
-        ]);
+        $user = User::findOrFail($id);
 
-        $user = User::find($id);
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 404);
+        if ($user->role !== 'donatur') {
+            return back()->with('error', 'Hanya donatur yang bisa diubah menjadi panti');
         }
 
-        if ($user->role === 'panti') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak dapat mengubah role panti'
-            ], 404);
-        }
+        $user->update(['role' => 'panti']);
 
-        if ($user->role === 'admin') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak dapat mengubah role admin'
-            ], 404);
-        }
-
-        $user->role = $request->role;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Role user berhasil diubah',
-            'data' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'role' => $user->role
-            ]
-        ]);
+        return back()->with('success', 'Role user berhasil diubah ke Panti');
     }
 }
