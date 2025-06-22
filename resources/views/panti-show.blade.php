@@ -218,7 +218,7 @@
                         const totalAmount = response.data.total_amount; // Ambil total amount
                         // Tampilkan total amount
                         document.getElementById('totalAmountDonasi').innerHTML = 
-                            `Total Donasi Terkumpul: <span class="font-bold">${totalAmount ? 'Rp' + totalAmount : 'Rp0'}</span>`;
+                            `Total Donasi Diterima Terkumpul: <span class="font-bold">${totalAmount ? 'Rp' + totalAmount : 'Rp0'}</span>`;
                             
                         if (transactions.length === 0) {
                             container.innerHTML = `
