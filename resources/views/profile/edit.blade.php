@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <div class="pt-24 sm:pt-28 pb-12">
+    <div class="pt-24 sm:pt-0 pb-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
                 {{-- Header --}}
