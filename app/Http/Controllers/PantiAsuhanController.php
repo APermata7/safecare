@@ -118,8 +118,8 @@ class PantiAsuhanController extends Controller
             'nomor_rekening' => $panti->nomor_rekening,
             'bank' => $panti->bank,
             'kontak' => $panti->kontak,
-            'created_at' => $panti->created_at->format('d-m-Y H:i:s'),
-            'updated_at' => $panti->updated_at->format('d-m-Y H:i:s'),
+            'created_at' => $panti->created_at,
+            'updated_at' => $panti->updated_at,
             'user' => [
                 'id' => $panti->user_id,
                 'name' => $panti->user->name ?? 'User tidak ditemukan',
