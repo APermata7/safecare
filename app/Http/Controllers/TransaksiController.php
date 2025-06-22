@@ -130,7 +130,7 @@ class TransaksiController extends Controller
                 'order_id' => $transaksi->order_id,
                 'amount' => number_format($transaksi->amount, 0, ',', '.'),
                 'status' => $transaksi->status,
-                'created_at' => $transaksi->created_at->translatedFormat('j F Y \p\u\k\u\l H.i'),
+                'created_at' => $transaksi->created_at->format('d F Y, H:i'),
                 'payment_method' => $transaksi->payment_method,
                 'hide_name' => $transaksi->hide_name
             ];
