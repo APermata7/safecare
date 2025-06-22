@@ -7,74 +7,71 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+// Route untuk halaman utama (welcome page)
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [PantiAsuhanController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Grup Route yang memerlukan autentikasi dan verifikasi email
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+    // Route untuk Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/panti-asuhan', [PantiAsuhanController::class, 'index']);
-    Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
+    // Route untuk melihat detail panti asuhan
+    Route::get('/panti-asuhan/{pantiAsuhan}', [PantiAsuhanController::class, 'show'])->name('panti.show');
+
+    // Route untuk pembayaran donasi
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
-    // halaman untuk pengguna melihat profil sendiri, tampilannya beda buat role donatur sama role panti
-    // Route::get('/profil', [ProfilController::class, 'index']);
-
-    // halaman untuk pengguna mengirim message ke admin
-    Route::get('/pesan', [MessageController::class, 'index']);
-    Route::get('/pesan/{id}', [MessageController::class, 'show']);
-    Route::post('/pesan', [MessageController::class, 'store']);
-
-    // user management for admin only
-    Route::middleware('admin')->prefix('admin')->group(function () {
-        // halaman /admin untuk melihat pesan masuk dari donatur/panti untuk admin
-        Route::get('/', [MessageController::class, 'adminIndex']);
-        Route::get('/{id}', [MessageController::class, 'show']);
-        Route::put('/pesan/{id}/reply', [MessageController::class, 'reply']);
-
-        // halaman /admin/users, management user
-        Route::get('/users', [UserController::class, 'index'])->name('admin.users');
-        Route::put('/users/{id}/ban', [UserController::class, 'ban'])->name('ban');
-        Route::put('/users/{id}/unban', [UserController::class, 'unban'])->name('unban');
-        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('delete.user');
-
-        // halaman /admin/client untuk update donatur ke panti
-        // sekali menjadi panti, tidak bisa kembali menjadi role donatur
-        Route::get('/client', [UserController::class, 'getDonatorOnly'])->name('admin');
-        Route::get('/client/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.pantiasuhan');
-        Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
-
-        // halaman untuk admin manajemen panti asuhan
-        Route::get('/panti', [PantiAsuhanController::class, 'indexAdmin'])->name('admin.panti.index');
-        Route::post('/panti', [PantiAsuhanController::class, 'store'])->name('admin.panti.store');
-        Route::get('/panti/{id}', [PantiAsuhanController::class, 'showAdmin'])->name('admin.panti.show');
-        Route::put('/panti/{id}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
-    });
-
-    // ROUTE SEMENTARA UNTUK DEVELOPMENT FRONTEND
-    // Halaman Riwayat Donasi Saya
-    Route::get('/riwayat-donasi-dev', function () {
-        return view('donasi.riwayat');
-    })->name('donasi.riwayat');
+    // Halaman Riwayat Donasi User yang sedang login (Donatur)
+    Route::get('/riwayat-donasi', [TransaksiController::class, 'userDonationHistory'])->name('donasi.riwayat');
 
     // Halaman Donasi Diterima (Khusus Panti)
-    Route::get('/panti/donasi-diterima-dev', function () {
-        return view('panti.donasi-diterima');
-    })->name('panti.donasi.diterima');
+    Route::get('/panti/donasi-diterima', [TransaksiController::class, 'pantiDonationHistory'])
+        ->middleware('panti') // Hanya user dengan role 'panti' yang bisa akses
+        ->name('panti.donasi.diterima');
 
-    // halaman riwayat transaksi user yang sedang login
-    // tambahin fungsi buat ini di TransaksiController jal
-    // halaman riwayat transaksi yang telah diterima panti
+    // Halaman Customer Service / Pesan untuk user (Donatur/Panti)
+    Route::get('/pesan', [MessageController::class, 'index'])->name('message.index');
+    Route::post('/pesan', [MessageController::class, 'store'])->name('message.store');
+    Route::get('/pesan/{id}', [MessageController::class, 'show'])->name('message.show'); // Untuk detail pesan user
 
+    // Grup Route khusus untuk Admin dengan middleware 'admin'
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        // Manajemen Pesan (Admin)
+        Route::get('/', [MessageController::class, 'adminIndex'])->name('admin.messages.index'); // Halaman utama admin untuk pesan
+        Route::get('/{id}', [MessageController::class, 'show'])->name('admin.messages.show'); // Detail pesan untuk admin (reuse show method)
+        Route::put('/pesan/{id}/reply', [MessageController::class, 'reply'])->name('admin.messages.reply'); // Balas pesan
+
+        // Manajemen User (CRUD)
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+        // Manajemen Panti Asuhan (CRUD)
+        Route::get('/panti', [PantiAsuhanController::class, 'index'])->name('admin.panti.index');
+        Route::get('/panti/create', [PantiAsuhanController::class, 'create'])->name('admin.panti.create');
+        Route::post('/panti', [PantiAsuhanController::class, 'store'])->name('admin.panti.store');
+        Route::get('/panti/{panti}/edit', [PantiAsuhanController::class, 'edit'])->name('admin.panti.edit');
+        Route::put('/panti/{panti}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
+        Route::delete('/panti/{panti}', [PantiAsuhanController::class, 'destroy'])->name('admin.panti.destroy');
+
+        // Manajemen Transaksi (Admin)
+        Route::get('/transaksi', [TransaksiController::class, 'adminTransactionHistory'])->name('admin.transaksi.index');
+        Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('admin.transaksi.show'); // Detail transaksi untuk admin
+        Route::put('/transaksi/{id}/update-status', [TransaksiController::class, 'updateTransactionStatus'])->name('admin.transaksi.update-status');
+    });
 });
 
+// Route autentikasi (login, register, dll.)
 require __DIR__.'/auth.php';
