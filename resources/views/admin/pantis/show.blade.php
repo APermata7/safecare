@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-6">
     <div class="bg-white rounded-lg shadow p-6">
         <div class="mb-6">
-            <a href="{{ route('admin.panti.index') }}" class="inline-flex items-center text-primary-green hover:underline">
+            <a href="{{ route('admin.panti.index') }}" class="inline-flex items-center text-primary-600 hover:underline">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                 </svg>
@@ -38,23 +38,27 @@
             @if($panti->foto)
             <div class="md:col-span-2">
                 <h3 class="text-sm font-medium text-gray-500 mb-2">Foto:</h3>
-                <img src="{{ asset('storage/' . $panti->foto) }}" alt="Foto Panti" class="h-64 rounded-lg">
+                <img src="{{ asset('storage/' . $panti->foto) }}" alt="Foto Panti" class="h-64 rounded-lg object-cover">
             </div>
             @endif
         </div>
 
-        <div class="flex space-x-4">
-            <a href="{{ route('admin.panti.edit', $panti->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
-                <i class="fas fa-edit mr-1"></i> Edit
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ route('admin.panti.edit', $panti->id) }}"
+               class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md shadow transition">
+                <i class="fas fa-edit text-sm"></i> Edit
             </a>
             <form method="POST" action="{{ route('admin.panti.destroy', $panti->id) }}">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="return confirm('Apakah Anda yakin ingin menghapus panti ini?')">
-                    <i class="fas fa-trash mr-1"></i> Hapus
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md shadow transition"
+                        onclick="return confirm('Apakah Anda yakin ingin menghapus panti ini?')">
+                    <i class="fas fa-trash text-sm"></i> Hapus
                 </button>
             </form>
         </div>
+
     </div>
 </div>
 @endsection

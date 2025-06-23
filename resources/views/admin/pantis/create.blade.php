@@ -20,31 +20,31 @@
 
         <!-- Notifikasi Error -->
         @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Ada kesalahan dalam pengisian form:</h3>
-                        <div class="mt-2 text-sm text-red-700">
-                            <ul class="list-disc pl-5 space-y-1">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Ada kesalahan dalam pengisian form:</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
         @endif
 
         <!-- Form -->
         <form method="POST" action="{{ route('admin.panti.store') }}" enctype="multipart/form-data">
             @csrf
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <!-- Informasi Dasar -->
                 <div class="md:col-span-2">
@@ -54,41 +54,41 @@
                 <!-- Nama Panti -->
                 <div>
                     <label for="nama_panti" class="block text-sm font-medium text-gray-700 mb-1">Nama Panti Asuhan*</label>
-                    <input type="text" id="nama_panti" name="nama_panti" value="{{ old('nama_panti') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                           placeholder="Contoh: Panti Asuhan Bahagia" required>
+                    <input type="text" id="nama_panti" name="nama_panti" value="{{ old('nama_panti') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Contoh: Panti Asuhan Bahagia" required>
                 </div>
 
                 <!-- Pengurus -->
                 <div>
                     <label for="pengurus" class="block text-sm font-medium text-gray-700 mb-1">Nama Pengurus*</label>
-                    <input type="text" id="pengurus" name="pengurus" value="{{ old('pengurus') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                           placeholder="Nama pengurus panti" required>
+                    <input type="text" id="pengurus" name="pengurus" value="{{ old('pengurus') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Nama pengurus panti" required>
                 </div>
 
                 <!-- Kontak -->
                 <div>
                     <label for="kontak" class="block text-sm font-medium text-gray-700 mb-1">Nomor Kontak*</label>
-                    <input type="text" id="kontak" name="kontak" value="{{ old('kontak') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                           placeholder="Contoh: 081234567890" required>
+                    <input type="text" id="kontak" name="kontak" value="{{ old('kontak') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Contoh: 081234567890" required>
                 </div>
 
                 <!-- Alamat -->
                 <div class="md:col-span-2">
                     <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap*</label>
-                    <textarea id="alamat" name="alamat" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                              placeholder="Jl. Contoh No. 123, Kota, Provinsi" required>{{ old('alamat') }}</textarea>
+                    <textarea id="alamat" name="alamat" rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Jl. Contoh No. 123, Kota, Provinsi" required>{{ old('alamat') }}</textarea>
                 </div>
 
                 <!-- Deskripsi -->
                 <div class="md:col-span-2">
                     <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Panti*</label>
-                    <textarea id="deskripsi" name="deskripsi" rows="5" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                              placeholder="Deskripsikan kondisi panti, jumlah anak asuh, fasilitas, dll." required>{{ old('deskripsi') }}</textarea>
+                    <textarea id="deskripsi" name="deskripsi" rows="5"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Deskripsikan kondisi panti, jumlah anak asuh, fasilitas, dll." required>{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <!-- Informasi Rekening -->
@@ -112,9 +112,9 @@
                 <!-- Nomor Rekening -->
                 <div>
                     <label for="nomor_rekening" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening*</label>
-                    <input type="text" id="nomor_rekening" name="nomor_rekening" value="{{ old('nomor_rekening') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                           placeholder="Contoh: 1234567890" required>
+                    <input type="text" id="nomor_rekening" name="nomor_rekening" value="{{ old('nomor_rekening') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                        placeholder="Contoh: 1234567890" required>
                 </div>
 
                 <!-- Dokumen dan Foto -->
@@ -126,9 +126,9 @@
                 <div>
                     <label for="foto_profil" class="block text-sm font-medium text-gray-700 mb-1">Foto Profil Panti*</label>
                     <div class="mt-1 flex items-center">
-                        <input type="file" id="foto_profil" name="foto_profil" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                               accept="image/jpeg,image/png" required>
+                        <input type="file" id="foto_profil" name="foto_profil"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                            accept="image/jpeg,image/png" required>
                     </div>
                     <p class="mt-1 text-sm text-gray-500">Format: JPEG/PNG (max: 2MB)</p>
                 </div>
@@ -137,9 +137,9 @@
                 <div>
                     <label for="dokumen_verifikasi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Verifikasi*</label>
                     <div class="mt-1 flex items-center">
-                        <input type="file" id="dokumen_verifikasi" name="dokumen_verifikasi" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
-                               accept=".pdf,.jpg,.jpeg,.png" required>
+                        <input type="file" id="dokumen_verifikasi" name="dokumen_verifikasi"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150"
+                            accept=".pdf,.jpg,.jpeg,.png" required>
                     </div>
                     <p class="mt-1 text-sm text-gray-500">Format: PDF/JPEG/PNG (max: 5MB)</p>
                 </div>
@@ -147,13 +147,12 @@
 
             <!-- Tombol Aksi -->
             <div class="flex justify-end space-x-4 border-t border-gray-200 pt-6">
-                <a href="{{ route('admin.panti.index') }}" 
-                   class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
+                <a href="{{ route('admin.panti.index') }}"
+                    class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
                     Batal
                 </a>
-                <button type="submit" 
-                        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200 flex items-center">
-                    <i class="fas fa-save mr-2"></i> Simpan Panti Asuhan
+                <button type="submit" class="bg-primary-green text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-green">
+                    Simpan Panti Asuhan
                 </button>
             </div>
         </form>

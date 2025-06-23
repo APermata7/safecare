@@ -6,125 +6,105 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold flex items-center">
-            <i class="fas fa-users mr-2"></i> Manajemen Pengguna
+            <i class="fas fa-users text-black-600 mr-2"></i> Manajemen Pengguna
         </h1>
-        <div>
-            <a href="{{ route('admin.donaturs.index') }}" class="btn-primary">
-                <i class="fas fa-hand-holding-heart mr-1"></i> Lihat Donatur
-            </a>
-        </div>
+        <a href="{{ route('admin.donaturs.index') }}" class="btn-primary">
+            <i class="fas fa-hand-holding-heart text-blue-600 mr-1"></i> Lihat Donatur
+        </a>
     </div>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+    <div class="bg-white shadow-card rounded-xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-wrap gap-4 justify-between items-center">
             <h2 class="text-lg font-semibold">Daftar Pengguna</h2>
-            
-            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
-                <form action="{{ route('admin.users.index') }}" method="GET" class="flex space-x-2">
-                    <div class="relative w-full md:w-64">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Cari pengguna..." 
-                            class="input-search"
-                            value="{{ request('search') }}"
-                        >
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-filter mr-1"></i> Filter
-                    </button>
-                </form>
-            </div>
+            <form action="{{ route('admin.users.index') }}" method="GET" class="w-full md:w-64">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pengguna..."
+                    class="w-full pl-4 pr-4 py-2 rounded-lg border-gray-300 focus:ring-primary-300 focus:border-primary-400">
+            </form>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full text-sm text-left divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengguna</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donasi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3">#</th>
+                        <th class="px-6 py-3">Pengguna</th>
+                        <th class="px-6 py-3">Role</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Donasi</th>
+                        <th class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-100 bg-white">
                     @forelse($users as $user)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <tr>
+                        <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                @if($user->avatar)
+                                <img src="{{ asset('storage/' . $user->avatar) }}" class="h-10 w-10 rounded-full object-cover">
+                                @else
+                                <div class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
                                     <i class="fas fa-user text-gray-500"></i>
                                 </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                @endif
+                                <div>
+                                    <div class="font-semibold text-gray-900">{{ $user->name }}</div>
+                                    <div class="text-gray-500">{{ $user->email }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $user->role === 'panti' ? 'bg-accent-100 text-accent-800' : 'bg-secondary-100 text-secondary-800' }}">
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 text-xs rounded-full font-medium 
+                                {{ $user->role === 'panti' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' }}">
                                 {{ ucfirst($user->role) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 text-xs rounded-full font-medium 
                                 {{ $user->banned_at ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
                                 {{ $user->banned_at ? 'Banned' : 'Aktif' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $user->donations_count }} kali
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                            @if($user->banned_at)
-                                <form action="{{ route('admin.users.unban', $user->id) }}" method="POST" class="inline">
+                        <td class="px-6 py-4 text-gray-600">{{ $user->donations_count }}x</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                @if($user->banned_at)
+                                <form action="{{ route('admin.users.unban', $user->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn-success btn-sm">
-                                        <i class="fas fa-check mr-1"></i> Unban
+                                    <button type="submit" class="text-green-600 hover:text-green-800" title="Unban">
+                                        <i class="fas fa-check"></i>
                                     </button>
                                 </form>
-                            @else
-                                <form action="{{ route('admin.users.ban', $user->id) }}" method="POST" class="inline">
+                                @else
+                                <form action="{{ route('admin.users.ban', $user->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn-warning btn-sm">
-                                        <i class="fas fa-ban mr-1"></i> Ban
+                                    <button type="submit" class="text-yellow-600 hover:text-yellow-800" title="Ban">
+                                        <i class="fas fa-ban"></i>
                                     </button>
                                 </form>
-                            @endif
-                            
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin menghapus pengguna ini?')">
-                                    <i class="fas fa-trash mr-1"></i> Hapus
-                                </button>
-                            </form>
+                                @endif
+
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Hapus pengguna ini?')" class="text-red-600 hover:text-red-800" title="Hapus">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
-                            <div class="flex flex-col items-center justify-center py-8">
-                                <i class="fas fa-user-slash text-4xl text-gray-400 mb-2"></i>
-                                <p>Tidak ada pengguna yang ditemukan</p>
-                            </div>
-                        </td>
+                        <td colspan="6" class="text-center py-8 text-gray-500">Tidak ada pengguna ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        @if($users->hasPages())
-        <div class="px-6 py-4 border-t border-gray-200">
-            {{ $users->appends(request()->query())->links() }}
+        <div class="px-6 py-4 border-t border-gray-100">
+            {{ $users->withQueryString()->links() }}
         </div>
-        @endif
     </div>
 </div>
 @endsection
