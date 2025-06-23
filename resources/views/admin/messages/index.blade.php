@@ -80,7 +80,7 @@
             // Function to fetch and display messages
             async function fetchMessages() {
                 try {
-                    const response = await fetch('/admin'); // Adjust if your route is different
+                    const response = await fetch('/admin/api'); // Adjust if your route is different
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -210,7 +210,7 @@
                 replyButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
 
                 try {
-                    const response = await fetch(`/admin/pesan/${messageId}/reply`, {
+                    const response = await fetch(`/admin/${messageId}/reply`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
