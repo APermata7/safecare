@@ -40,7 +40,7 @@ class MessageController extends Controller
 
         return response()->json([
             'messages' => $messages,
-            'totalPanti' => PantiAsuhan::count(),
+            'totalPanti' => PantiAsuhan::where('status_verifikasi', 'verified')->count(),
             'totalDonatur' => User::where('role', 'donatur')->count(),
         ], 200);
     }

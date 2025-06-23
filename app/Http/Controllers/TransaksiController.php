@@ -115,7 +115,7 @@ class TransaksiController extends Controller
 
         if (!$pantiAsuhanId) {
             // Jika user dengan role 'panti' tapi belum punya data panti asuhan
-            return view('panti.donasi-diterima', ['transaksis' => collect([])])
+            return view('panti.donasi-diterima', ['transaksis' => collect([]), 'totalDonasi' => 0])
                 ->with('info', 'Anda belum memiliki data panti asuhan terdaftar. Silakan lengkapi profil panti Anda.');
         }
 
@@ -125,7 +125,12 @@ class TransaksiController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('panti.donasi-diterima', compact('transaksis'));
+        // Hitung total donasi sukses
+        $totalDonasi = Transaksi::where('panti_id', $pantiAsuhanId)
+            ->where('status', 'success')
+            ->sum('amount');
+
+        return view('panti.donasi-diterima', compact('transaksis', 'totalDonasi'));
     }
 
     /**

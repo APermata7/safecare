@@ -39,10 +39,11 @@ $transaksis = collect([
                             <div>
                                 {{-- Pastikan relasi pantiAsuhan sudah di-load --}}
                                 <p class="font-bold text-gray-800">Donasi ke: {{ $transaksi->panti->nama_panti ?? 'Panti Dihapus' }}</p>
+                                <p class="text-sm text-gray-800">{{ $transaksi->panti->kontak ?? '-' }}</p>
                                 <p class="text-sm text-gray-500">{{ $transaksi->created_at->format('d F Y, H:i') }}</p>
                             </div>
                             <div class="text-right">
-                                <p class="font-bold text-lg text-primary-green">Rp {{ number_format($transaksi->amount, 0, ',', '.') }}</p>
+                                <p class="font-bold text-lg text-primary-green">Rp{{ number_format($transaksi->amount, 0, ',', '.') }}</p>
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full
                                     @if($transaksi->status === 'success') bg-green-100 text-green-800
                                     @elseif($transaksi->status === 'waiting confirmation') bg-yellow-100 text-yellow-800

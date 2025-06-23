@@ -1,29 +1,3 @@
-@php
-// Data Dummy ini dihapus atau dikomentari
-/*
-$transaksis = collect([
-    (object)[
-        'user' => (object)['name' => 'Budi Santoso'],
-        'created_at' => now()->subHours(5),
-        'amount' => 150000,
-        'status' => 'done',
-    ],
-    (object)[
-        'user' => (object)['name' => 'Citra Lestari'],
-        'created_at' => now()->subDays(1),
-        'amount' => 75000,
-        'status' => 'done',
-    ],
-    (object)[
-        'user' => (object)['name' => 'Donatur Anonim'],
-        'created_at' => now()->subDays(3),
-        'amount' => 200000,
-        'status' => 'done',
-    ],
-]);
-*/
-@endphp
-
 <x-app-layout>
     <div class="pt-24 sm:pt-4 pb-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8">
@@ -41,14 +15,17 @@ $transaksis = collect([
 
                 <div class="space-y-4">
                     @forelse($transaksis as $transaksi)
+                        <h2 class="font-bold text-[20px] text-primary-green">Total Terkumpul: Rp{{ number_format($totalDonasi, 0, ',', '.') }}</h2>
+                        <hr>
                         <div class="p-4 border rounded-xl flex justify-between items-center hover:bg-gray-50 transition">
                             <div>
                                 {{-- Pastikan relasi user sudah di-load --}}
                                 <p class="font-bold text-gray-800">Donasi dari: {{ $transaksi->user->name ?? 'Donatur Dihapus/Anonim' }}</p>
+                                <p class="text-sm text-gray-800">{{ $transaksi->user->email ?? '-' }}</p>
                                 <p class="text-sm text-gray-500">{{ $transaksi->created_at->format('d F Y, H:i') }}</p>
                             </div>
                             <div class="text-right">
-                                <p class="font-bold text-lg text-primary-green">Rp {{ number_format($transaksi->amount, 0, ',', '.') }}</p>
+                                <p class="font-bold text-lg text-primary-green">Rp{{ number_format($transaksi->amount, 0, ',', '.') }}</p>
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full
                                              @if($transaksi->status === 'success') bg-green-100 text-green-800
                                              @elseif($transaksi->status === 'waiting confirmation') bg-yellow-100 text-yellow-800
