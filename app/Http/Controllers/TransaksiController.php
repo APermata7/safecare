@@ -137,7 +137,10 @@ class TransaksiController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.transaksi.index', compact('transaksis'));
+        return response()->json([
+            'success' => true,
+            'transaksis' => $transaksis
+        ]);
     }
 
     /**
@@ -226,14 +229,4 @@ class TransaksiController extends Controller
             'panti' => $panti->only(['id', 'nama_panti'])
         ]);
     }
-    // riwayat transaksi yang dikirim user sedang login
-
-    // riwayat transaksi yang diterima panti asuhan
-
-    // transaksi si admin
-    // get all transactions
-
-    // update status transaksi
-    // klo udh selesai transfer ke panti, update status jadi success
-
 }

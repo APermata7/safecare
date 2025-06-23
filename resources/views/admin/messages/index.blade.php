@@ -1,9 +1,22 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="pt-24 sm:pt-4 pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+            <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-6 md:p-8">
+                <div class="flex justify-between">
+                    <span class="text-base font-semibold text-gray-700">
+                        <i class="fa-solid fa-house mr-2"></i>
+                        Total Panti: <span id="total-panti">0</span>
+                    </span>
+                    <span class="text-base font-semibold text-gray-700">
+                        <i class="fa-solid fa-hand-holding-heart mr-2"></i>
+                        Total Donatur: <span id="total-donatur">0</span>
+                    </span>
+                </div>
+            </div>
+
             <div class="flex justify-center">
                 <h2 class="font-semibold text-lg text-gray-700 bg-white shadow-sm rounded-full px-8 py-3">
-                    Manajemen Pesan (Admin)
+                    Manajemen Pesan
                 </h2>
             </div>
 
@@ -80,11 +93,13 @@
             // Function to fetch and display messages
             async function fetchMessages() {
                 try {
-                    const response = await fetch('/admin'); // Adjust if your route is different
+                    const response = await fetch('/admin/api'); // Adjust if your route is different
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const data = await response.json();
+                    document.getElementById('total-panti').textContent = data.totalPanti ?? 0;
+                    document.getElementById('total-donatur').textContent = data.totalDonatur ?? 0;
 
                     messagesListContainer.innerHTML = ''; // Clear existing content
 
@@ -210,7 +225,7 @@
                 replyButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
 
                 try {
-                    const response = await fetch(`/admin/pesan/${messageId}/reply`, {
+                    const response = await fetch(`/admin/${messageId}/reply`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -241,4 +256,4 @@
             fetchMessages(); // Initial fetch when page loads
         });
     </script>
-</x-app-layout>
+</x-admin-layout>

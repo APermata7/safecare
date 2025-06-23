@@ -1,9 +1,9 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="pt-24 sm:pt-4 pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <div class="flex justify-center">
                 <h2 class="font-semibold text-lg text-gray-700 bg-white shadow-sm rounded-full px-8 py-3">
-                    Manajemen Transaksi (Admin)
+                    Manajemen Transaksi
                 </h2>
             </div>
 
@@ -88,7 +88,7 @@
             // Function to fetch and display transactions
             async function fetchTransactions() {
                 try {
-                    const response = await fetch('/admin/transaksi'); // New route for admin transactions
+                    const response = await fetch('/admin/transaksi/api'); // New route for admin transactions
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -244,4 +244,4 @@
             fetchTransactions(); // Initial fetch when page loads
         });
     </script>
-</x-app-layout>
+</x-admin-layout>

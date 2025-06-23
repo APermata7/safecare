@@ -9,28 +9,100 @@
 
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-6 md:p-8">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Kirim Pesan Baru</h3>
-                <form id="sendMessageForm" class="space-y-4">
+                <form id="sendMessageForm" class="space-y-4" enctype="multipart/form-data">
                     @csrf
                     <div>
                         <label for="judul" class="block text-sm font-medium text-gray-700">Subjek</label>
                         <select id="judul" name="judul" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50" required>
                             <option value="Feedback">Feedback</option>
                             @if(auth()->check() && auth()->user()->role === 'donatur')
-                                <option value="Request panti user">Request Panti Asuhan Baru</option>
+                                <option value="Request panti user">Request Mendaftar Panti Asuhan</option>
                             @endif
                         </select>
                         <p id="judulError" class="mt-2 text-sm text-red-600 hidden"></p>
                     </div>
                     <div>
-                        <label for="messageContent" class="block text-sm font-medium text-gray-700">Isi Pesan</label>
-                        <textarea id="messageContent" name="message" rows="5" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50" required></textarea>
-                        <p id="messageContentError" class="mt-2 text-sm text-red-600 hidden"></p>
-                    </div>
-                    <div>
-                        <label for="fileAttachment" class="block text-sm font-medium text-gray-700">Lampiran (Opsional)</label>
-                        <input type="file" id="fileAttachment" name="file" class="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-primary-green hover:file:bg-gray-200" accept="image/*,application/pdf">
-                        <p id="fileAttachmentError" class="mt-2 text-sm text-red-600 hidden"></p>
-                    </div>
+    <label for="messageContent" class="block text-sm font-medium text-gray-700">Isi Pesan</label>
+    <textarea id="messageContent" name="message" rows="5"
+        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+        required placeholder="Isikan pesan..."></textarea>
+    <p id="messageContentError" class="mt-2 text-sm text-red-600 hidden"></p>
+</div>
+<div>
+    <label for="fileAttachment" class="block text-sm font-medium text-gray-700">Lampiran (Opsional)</label>
+    <input type="file" id="fileAttachment" name="file"
+        class="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-primary-green hover:file:bg-gray-200"
+        accept="image/*,application/pdf">
+    <p class="text-xs text-gray-500 mt-1">Lampirkan gambar atau dokumen pendukung jika diperlukan.</p>
+    <p id="fileAttachmentError" class="mt-2 text-sm text-red-600 hidden"></p>
+</div>
+
+<!-- Form tambahan untuk Request panti user -->
+<div id="pantiFields" class="space-y-4 hidden">
+<p class="text-xs text-gray-500 mt-1">Silahkan isi lampiran di atas dengan screenshot isi form panti asuhan Anda di bawah ini.</p>
+    <div>
+        <label for="nama_panti" class="block text-sm font-medium text-gray-700">Nama Panti</label>
+        <input type="text" id="nama_panti" name="nama_panti"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="Isikan nama panti asuhan..." />
+        <p id="namaPantiError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+        <input type="text" id="alamat" name="alamat"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="Isikan alamat lengkap panti..." />
+        <p id="alamatError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+        <textarea id="deskripsi" name="deskripsi" rows="3"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="Isikan deskripsi tentang panti..."></textarea>
+        <p id="deskripsiError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="foto_profil" class="block text-sm font-medium text-gray-700">Foto Profil Panti</label>
+        <input type="file" id="foto_profil" name="foto_profil"
+            class="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-primary-green hover:file:bg-gray-200"
+            accept="image/*">
+        <p class="text-xs text-gray-500 mt-1">Unggah foto profil panti (format gambar).</p>
+        <p id="fotoProfilError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="dokumen_verifikasi" class="block text-sm font-medium text-gray-700">Dokumen Verifikasi (PDF)</label>
+        <input type="file" id="dokumen_verifikasi" name="dokumen_verifikasi"
+            class="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-primary-green hover:file:bg-gray-200"
+            accept="application/pdf">
+        <p class="text-xs text-gray-500 mt-1">Unggah dokumen verifikasi panti (format PDF).</p>
+        <p id="dokumenVerifikasiError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="nomor_rekening" class="block text-sm font-medium text-gray-700">Nomor Rekening</label>
+        <input type="text" id="nomor_rekening" name="nomor_rekening"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="Isikan nomor rekening panti..." />
+        <p id="nomorRekeningError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="bank" class="block text-sm font-medium text-gray-700">Bank</label>
+        <input type="text" id="bank" name="bank"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="Isikan nama bank nomor rekening panti..." />
+            <p class="text-xs text-gray-500 mt-1">Contoh: BCA, BRI, Mandiri, dll.</p>
+        <p id="bankError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+    <div>
+        <label for="kontak" class="block text-sm font-medium text-gray-700">Kontak</label>
+        <input type="text" id="kontak" name="kontak"
+            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50"
+            placeholder="nomor telepon / email panti" />
+        <p class="text-xs text-gray-500 mt-1">Contoh: 08123456789 / email@panti.com</p>
+        <p id="kontakError" class="mt-2 text-sm text-red-600 hidden"></p>
+    </div>
+</div>
+                    <!-- End form tambahan -->
+
                     <div class="flex justify-end">
                         <x-primary-button type="submit" id="sendMessageButton">Kirim Pesan</x-primary-button>
                     </div>
@@ -83,65 +155,116 @@
             const sendMessageForm = document.getElementById('sendMessageForm');
             const sendMessageButton = document.getElementById('sendMessageButton');
             const userMessagesListContainer = document.getElementById('user-messages-list');
-            const userMessageDetailModal = document.getElementById('userMessageDetailModal');
+            const pantiFields = document.getElementById('pantiFields');
+            const judulSelect = document.getElementById('judul');
 
             // Error message elements
             const judulError = document.getElementById('judulError');
             const messageContentError = document.getElementById('messageContentError');
             const fileAttachmentError = document.getElementById('fileAttachmentError');
+            const namaPantiError = document.getElementById('namaPantiError');
+            const alamatError = document.getElementById('alamatError');
+            const deskripsiError = document.getElementById('deskripsiError');
+            const fotoProfilError = document.getElementById('fotoProfilError');
+            const dokumenVerifikasiError = document.getElementById('dokumenVerifikasiError');
+            const nomorRekeningError = document.getElementById('nomorRekeningError');
+            const bankError = document.getElementById('bankError');
+            const kontakError = document.getElementById('kontakError');
+
+            // Tampilkan/hidden field panti sesuai pilihan dropdown
+            judulSelect.addEventListener('change', function() {
+                if (this.value === 'Request panti user') {
+                    pantiFields.classList.remove('hidden');
+                } else {
+                    pantiFields.classList.add('hidden');
+                }
+            });
 
             // Function to clear form errors
             function clearFormErrors() {
                 judulError.classList.add('hidden');
                 messageContentError.classList.add('hidden');
                 fileAttachmentError.classList.add('hidden');
+                namaPantiError.classList.add('hidden');
+                alamatError.classList.add('hidden');
+                deskripsiError.classList.add('hidden');
+                fotoProfilError.classList.add('hidden');
+                dokumenVerifikasiError.classList.add('hidden');
+                nomorRekeningError.classList.add('hidden');
+                bankError.classList.add('hidden');
+                kontakError.classList.add('hidden');
             }
 
             // Handle send message form submission
             sendMessageForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                clearFormErrors(); // Clear errors before new submission
+                clearFormErrors();
 
                 const formData = new FormData(this);
                 sendMessageButton.disabled = true;
                 sendMessageButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
 
                 try {
-                    const response = await fetch(this.action, {
-                        method: 'POST',
+                    const response = await axios.post('/pesan', formData, {
                         headers: {
                             'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: formData
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        }
                     });
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        if (errorData.errors) {
-                            if (errorData.errors.judul) {
-                                judulError.textContent = errorData.errors.judul[0];
-                                judulError.classList.remove('hidden');
-                            }
-                            if (errorData.errors.message) {
-                                messageContentError.textContent = errorData.errors.message[0];
-                                messageContentError.classList.remove('hidden');
-                            }
-                            if (errorData.errors.file) {
-                                fileAttachmentError.textContent = errorData.errors.file[0];
-                                fileAttachmentError.classList.remove('hidden');
-                            }
-                        }
-                        throw new Error(errorData.message || 'Gagal mengirim pesan.');
-                    }
-
-                    const data = await response.json();
-                    alert(data.success);
-                    sendMessageForm.reset(); // Clear form
-                    fetchUserMessages(); // Refresh messages list
+                    alert(response.data.success);
+                    sendMessageForm.reset();
+                    pantiFields.classList.add('hidden');
+                    fetchUserMessages();
                 } catch (error) {
-                    console.error('Error sending message:', error);
-                    alert('Error: ' + error.message);
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        if (errors.judul) {
+                            judulError.textContent = errors.judul[0];
+                            judulError.classList.remove('hidden');
+                        }
+                        if (errors.message) {
+                            messageContentError.textContent = errors.message[0];
+                            messageContentError.classList.remove('hidden');
+                        }
+                        if (errors.file) {
+                            fileAttachmentError.textContent = errors.file[0];
+                            fileAttachmentError.classList.remove('hidden');
+                        }
+                        if (errors.nama_panti) {
+                            namaPantiError.textContent = errors.nama_panti[0];
+                            namaPantiError.classList.remove('hidden');
+                        }
+                        if (errors.alamat) {
+                            alamatError.textContent = errors.alamat[0];
+                            alamatError.classList.remove('hidden');
+                        }
+                        if (errors.deskripsi) {
+                            deskripsiError.textContent = errors.deskripsi[0];
+                            deskripsiError.classList.remove('hidden');
+                        }
+                        if (errors.foto_profil) {
+                            fotoProfilError.textContent = errors.foto_profil[0];
+                            fotoProfilError.classList.remove('hidden');
+                        }
+                        if (errors.dokumen_verifikasi) {
+                            dokumenVerifikasiError.textContent = errors.dokumen_verifikasi[0];
+                            dokumenVerifikasiError.classList.remove('hidden');
+                        }
+                        if (errors.nomor_rekening) {
+                            nomorRekeningError.textContent = errors.nomor_rekening[0];
+                            nomorRekeningError.classList.remove('hidden');
+                        }
+                        if (errors.bank) {
+                            bankError.textContent = errors.bank[0];
+                            bankError.classList.remove('hidden');
+                        }
+                        if (errors.kontak) {
+                            kontakError.textContent = errors.kontak[0];
+                            kontakError.classList.remove('hidden');
+                        }
+                    }
+                    alert('Error: ' + (error.response?.data?.message || error.message));
                 } finally {
                     sendMessageButton.disabled = false;
                     sendMessageButton.innerHTML = 'Kirim Pesan';
