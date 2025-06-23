@@ -161,10 +161,10 @@
         </div>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-gray-200 mb-2">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-4">
+        <footer class="bg-white border-t border-gray-200 mb-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8 py-4">
                 <div class="md:flex md:items-center md:justify-between">
-                    <div class="mt-8 md:mt-0 md:order-1">
+                    <div class="mt-2 md:mt-0 md:order-1">
                         <p class="text-center text-base text-gray-500">
                             © 2025 SafeCare. All rights reserved.
                         </p>
