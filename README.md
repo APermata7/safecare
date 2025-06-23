@@ -24,7 +24,6 @@
   <img src="https://img.shields.io/badge/Midtrans-00A9E0?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABrUlEQVQ4T62Tz0tCURjGf+fPmZmB0x0iCFIYWq2CEhF6RUrY4MvIBIShAFWkl0aoVogULCwsAksbEWpVEF6SCdTGFJ4Dojh3ryffnyPYT5q4Y5/nPe59z/n/xFwB1mGk9Y9ycYzaO+F6DRCcI2tWrV9ZIefNnd6t0b6NjVaqPpULp9gMcHLrb5PbA+BrQRETVjGGlvayzWTgNs6BgDy3t33UwaHpFr32cwNAHjrYe+oTbBKCkboDSHD4HIDhHKFjMzFgMQFb7FznMbArzOE+GuS1AFq2gH/2L9Iz7orUd3xDJMsoJqHxAABy0GlU8aRngBJK2HFiOHF++A1Y6VZBgu+FVrJODNUC+JWxB0ybfkFqF3Sfb/jZ1cnIC+a6ApN8oZOsKpI2IVTuBjYBK4JQbi3lgo5ZMG6E9UJ1WejEIRc0LCHD/NpHiHHpt0+I5kwAAAAAElFTkSuQmCC&logoColor=white" />
   <img src="https://img.shields.io/badge/MySQL-00758F?style=for-the-badge&logo=mysql&logoColor=white" />
   <img src="https://img.shields.io/badge/PHP-8892BF?style=for-the-badge&logo=php&logoColor=white" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
   <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
 
