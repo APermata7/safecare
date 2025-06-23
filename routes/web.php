@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', function () {
             return view('panti.dashboard');
         })->name('panti.dashboard');
-        
+
         // Tambahkan route khusus panti lainnya di sini
     });
 
@@ -93,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('transactions')->group(function () {
             Route::get('/', [AdminTransactionController::class, 'index'])->name('transactions.index');
             Route::get('/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
+            Route::post('/{transaction}/update-status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.update-status');
             Route::delete('/{transaction}', [AdminTransactionController::class, 'destroy'])->name('transactions.destroy');
         });
     });

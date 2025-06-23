@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasOne; // Import HasOne
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -24,7 +25,8 @@ class User extends Authenticatable
         'avatar',
         'phone',
         'role',
-        'status'
+        'status',
+        'banned_at' // Added banned_at for ban functionality
     ];
 
     /**
@@ -47,6 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'banned_at' => 'datetime' // Cast banned_at as datetime
         ];
     }
 
@@ -70,5 +73,37 @@ class User extends Authenticatable
     public function pantiAsuhan(): HasOne
     {
         return $this->hasOne(PantiAsuhan::class, 'user_id');
+    }
+
+    /**
+     * Get all transactions initiated by this user.
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaksi::class, 'user_id');
+    }
+
+    /**
+     * Check if user is banned.
+     */
+    public function isBanned(): bool
+    {
+        return !is_null($this->banned_at);
+    }
+
+    /**
+     * Scope a query to only include banned users.
+     */
+    public function scopeBanned($query)
+    {
+        return $query->whereNotNull('banned_at');
+    }
+
+    /**
+     * Scope a query to only include active users.
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereNull('banned_at');
     }
 }
