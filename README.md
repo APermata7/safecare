@@ -48,9 +48,6 @@ composer install
 # Install dependency frontend
 npm install
 
-# Build asset frontend
-npm run build
-
 # Generate application key
 php artisan key:generate
 
