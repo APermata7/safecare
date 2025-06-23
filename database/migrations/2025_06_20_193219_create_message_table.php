@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
@@ -18,14 +15,12 @@ return new class extends Migration
             $table->enum('role', ['donatur', 'panti', 'admin'])->default('donatur');
             $table->text('message');
             $table->string('file_path')->nullable();
-            $table->timestamps();
             $table->text('reply')->nullable();
+            $table->timestamp('replied_at')->nullable(); // Added for tracking reply time
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('messages');
