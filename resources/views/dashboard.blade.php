@@ -31,7 +31,7 @@
                                 <div class="p-6">
                                     <h3 class="text-lg font-bold text-gray-800 truncate">{{ $panti['nama_panti'] }}</h3>
                                     <p class="text-gray-600 mt-2 flex items-center">
-                                        <i class="fas fa-phone mr-2 text-secondary-green"></i>
+                                        <i class="fas fa-address-book mr-2 text-secondary-green"></i>
                                         {{ $panti['kontak'] }}
                                     </p>
                                 </div>

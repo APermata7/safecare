@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Detail panti (untuk semua user)
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
+    Route::get('/panti-asuhan/{id}/history', [TransaksiController::class, 'showHistoryPanti'])->name('panti.history');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
     // Message routes

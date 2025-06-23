@@ -17,7 +17,8 @@ class Transaksi extends Model
         'amount',
         'payment_method',
         'status',
-        'snap_token'
+        'snap_token',
+        'hide_name'
     ];
 
     protected $keyType = 'string';

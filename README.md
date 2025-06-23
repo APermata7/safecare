@@ -1,6 +1,6 @@
 # SafeCare
 
-Aplikasi crowdfunding panti asuhan...
+Aplikasi crowdfunding untuk panti asuhan...
 
 ## Langkah Instalasi
 
@@ -15,7 +15,9 @@ npm install
 npm run build
 
 php artisan migrate:fresh --seed
-php artisan storage:link
 php artisan key:generate
+php artisan storage:link
+
+npm run dev
 php artisan serve
 ```
