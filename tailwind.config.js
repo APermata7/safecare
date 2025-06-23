@@ -64,7 +64,7 @@ export default {
     },
 
     plugins: [
-        forms,
+        require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
     ],

@@ -24,20 +24,34 @@
                 <p class="text-gray-800">{{ $panti->nama_panti }}</p>
             </div>
             <div>
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Pengurus:</h3>
+                <p class="text-gray-800">{{ $panti->pengurus }}</p>
+            </div>
+            <div class="md:col-span-2">
                 <h3 class="text-sm font-medium text-gray-500 mb-2">Alamat:</h3>
                 <p class="text-gray-800">{{ $panti->alamat }}</p>
             </div>
+            <div class="md:col-span-2">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Deskripsi:</h3>
+                <p class="text-gray-800 whitespace-pre-line">{{ $panti->deskripsi }}</p>
+            </div>
+            @if($panti->foto)
+            <div class="md:col-span-2">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Foto:</h3>
+                <img src="{{ asset('storage/' . $panti->foto) }}" alt="Foto Panti" class="h-64 rounded-lg">
+            </div>
+            @endif
         </div>
 
         <div class="flex space-x-4">
             <a href="{{ route('admin.panti.edit', $panti->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
-                Edit
+                <i class="fas fa-edit mr-1"></i> Edit
             </a>
             <form method="POST" action="{{ route('admin.panti.destroy', $panti->id) }}">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="return confirm('Apakah Anda yakin ingin menghapus panti ini?')">
-                    Hapus
+                    <i class="fas fa-trash mr-1"></i> Hapus
                 </button>
             </form>
         </div>

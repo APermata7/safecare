@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminPantiController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminMessageController;
+use App\Http\Controllers\Admin\AdminTransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,10 +31,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
-    // halaman untuk pengguna melihat profil sendiri, tampilannya beda buat role donatur sama role panti
-    // Route::get('/profil', [ProfilController::class, 'index']);
-
-    // halaman untuk pengguna mengirim message ke admin
     Route::get('/pesan', [MessageController::class, 'index']);
     Route::get('/pesan/{id}', [MessageController::class, 'show']);
     Route::post('/pesan', [MessageController::class, 'store']);
@@ -43,9 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Messages
         Route::prefix('messages')->group(function () {
-            Route::get('/', [AdminDashboardController::class, 'index'])->name('messages.index');
-            Route::get('/{message}', [AdminDashboardController::class, 'show'])->name('messages.show');
-            Route::put('/{message}/reply', [AdminDashboardController::class, 'reply'])->name('messages.reply');
+            Route::get('/', [AdminMessageController::class, 'index'])->name('messages.index');
+            Route::get('/{message}', [AdminMessageController::class, 'show'])->name('messages.show');
+            Route::put('/{message}/reply', [AdminMessageController::class, 'reply'])->name('messages.reply');
         });
 
         // Users Management
@@ -72,14 +70,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/{panti}', [AdminPantiController::class, 'update'])->name('panti.update');
             Route::delete('/{panti}', [AdminPantiController::class, 'destroy'])->name('panti.destroy');
         });
+
+        // Admin Transactions
+        Route::prefix('transactions')->group(function () {
+            Route::get('/', [AdminTransactionController::class, 'index'])->name('transactions.index');
+            Route::get('/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
+            Route::delete('/{transaction}', [AdminTransactionController::class, 'destroy'])->name('transactions.destroy');
+        });
     });
-    // ROUTE SEMENTARA UNTUK DEVELOPMENT FRONTEND
-    // Halaman Riwayat Donasi Saya
+
+    // Development routes
     Route::get('/riwayat-donasi-dev', function () {
         return view('donasi.riwayat');
     })->name('donasi.riwayat');
 
-    // Halaman Donasi Diterima (Khusus Panti)
     Route::get('/panti/donasi-diterima-dev', function () {
         return view('panti.donasi-diterima');
     })->name('panti.donasi.diterima');

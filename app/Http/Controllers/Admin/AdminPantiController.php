@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PantiAsuhan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPantiController extends Controller
 {
     public function index()
     {
-        $pantis = PantiAsuhan::all();
+        $pantis = PantiAsuhan::latest()->paginate(10);
         return view('admin.pantis.index', compact('pantis'));
     }
 
@@ -22,51 +23,96 @@ class AdminPantiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_panti' => 'required|string|max:255|unique:panti_asuuhan,nama_panti',
-            'alamat' => 'required|string|max:500',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'nama_panti' => 'required|string|max:255',
+            'pengurus' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'deskripsi' => 'required|string',
+            'kontak' => 'required|string|max:20',
+            'foto_profil' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'dokumen_verifikasi' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
+            'nomor_rekening' => 'required|string',
+            'bank' => 'required|string'
         ]);
 
-        if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('panti-images', 'public');
+        // Upload foto profil
+        if ($request->hasFile('foto_profil')) {
+            $validated['foto_profil'] = $request->file('foto_profil')->store('panti/foto', 'public');
         }
+
+        // Upload dokumen verifikasi
+        if ($request->hasFile('dokumen_verifikasi')) {
+            $validated['dokumen_verifikasi'] = $request->file('dokumen_verifikasi')->store('panti/dokumen', 'public');
+        }
+
+        $validated['status_verifikasi'] = 'terverifikasi'; // Default status verifikasi
+        $validated['user_id'] = auth()->id(); // Assign ke user yang login
 
         PantiAsuhan::create($validated);
 
         return redirect()->route('admin.panti.index')
-            ->with('success', 'Panti berhasil ditambahkan');
+            ->with('success', 'Panti Asuhan berhasil ditambahkan');
     }
 
-    public function show($id)
+    public function show(PantiAsuhan $panti)
     {
-        $panti = PantiAsuhan::findOrFail($id);
         return view('admin.pantis.show', compact('panti'));
     }
 
-    public function edit($id)
+    public function edit(PantiAsuhan $panti)
     {
-        $panti = PantiAsuhan::findOrFail($id);
         return view('admin.pantis.edit', compact('panti'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, PantiAsuhan $panti)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_panti' => 'required|string|max:255',
-            'alamat'     => 'required|string',
+            'pengurus' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'deskripsi' => 'required|string',
+            'kontak' => 'required|string|max:20',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'dokumen_verifikasi' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:5120',
+            'nomor_rekening' => 'required|string',
+            'bank' => 'required|string',
+            'status_verifikasi' => 'required|in:menunggu,terverifikasi,ditolak'
         ]);
 
-        $panti = PantiAsuhan::findOrFail($id);
-        $panti->update($request->only('nama_panti', 'alamat'));
+        // Update foto profil jika ada
+        if ($request->hasFile('foto_profil')) {
+            if ($panti->foto_profil) {
+                Storage::disk('public')->delete($panti->foto_profil);
+            }
+            $validated['foto_profil'] = $request->file('foto_profil')->store('panti/foto', 'public');
+        }
 
-        return redirect()->route('admin.panti.index')->with('success', 'Data panti berhasil diperbarui.');
+        // Update dokumen verifikasi jika ada
+        if ($request->hasFile('dokumen_verifikasi')) {
+            if ($panti->dokumen_verifikasi) {
+                Storage::disk('public')->delete($panti->dokumen_verifikasi);
+            }
+            $validated['dokumen_verifikasi'] = $request->file('dokumen_verifikasi')->store('panti/dokumen', 'public');
+        }
+
+        $panti->update($validated);
+
+        return redirect()->route('admin.panti.index')
+            ->with('success', 'Panti Asuhan berhasil diperbarui');
     }
 
-    public function destroy($id)
+    public function destroy(PantiAsuhan $panti)
     {
-        $panti = PantiAsuhan::findOrFail($id);
+        // Hapus file terkait
+        if ($panti->foto_profil) {
+            Storage::disk('public')->delete($panti->foto_profil);
+        }
+        if ($panti->dokumen_verifikasi) {
+            Storage::disk('public')->delete($panti->dokumen_verifikasi);
+        }
+        
         $panti->delete();
 
-        return redirect()->route('admin.panti.index')->with('success', 'Panti berhasil dihapus.');
+        return redirect()->route('admin.panti.index')
+            ->with('success', 'Panti Asuhan berhasil dihapus');
     }
 }

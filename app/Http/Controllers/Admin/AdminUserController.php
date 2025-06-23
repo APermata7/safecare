@@ -10,7 +10,7 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', '!=', 'admin')->get();
+        $users = User::where('role', '!=', 'admin')->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
@@ -40,7 +40,7 @@ class AdminUserController extends Controller
 
     public function getDonatorOnly()
     {
-        $donaturs = User::where('role', 'donatur')->get();
+        $donaturs = User::where('role', 'donatur')->paginate(10);
         return view('admin.users.donaturs', compact('donaturs'));
     }
 

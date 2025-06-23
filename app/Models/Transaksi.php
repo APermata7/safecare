@@ -20,22 +20,11 @@ class Transaksi extends Model
         'snap_token'
     ];
 
-    /**
-     * The "type" of the primary key ID.
-     *
-     * @var string
-     */
     protected $keyType = 'string';
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = false;
 
     // Relasi ke user (donatur)
-    public function user()
+    public function donatur()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -50,5 +39,18 @@ class Transaksi extends Model
     public static function generateOrderId()
     {
         return 'DONASI-' . now()->format('YmdHis') . '-' . substr(md5(uniqid()), 0, 8);
+    }
+
+    // Status transaksi
+    public function getStatusLabelAttribute()
+    {
+        $statuses = [
+            'pending' => 'Menunggu Pembayaran',
+            'success' => 'Sukses',
+            'failed' => 'Gagal',
+            'expired' => 'Kadaluarsa'
+        ];
+
+        return $statuses[$this->status] ?? $this->status;
     }
 }

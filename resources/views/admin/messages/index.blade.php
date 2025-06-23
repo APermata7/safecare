@@ -1,58 +1,61 @@
-@extends('admin.layout')
-
-@section('title', 'Pesan Masuk')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800">Pesan Masuk</h2>
-    </div>
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Manajemen Pesan</h1>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        @if($messages->count() > 0)
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengirim</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pesan</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($messages as $message)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="text-sm font-medium text-gray-900">{{ $message->user->name }}</div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500">{{ $message->user->email }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900">{{ Str::limit($message->isi, 50) }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500">{{ $message->created_at->format('d M Y') }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.messages.show', $message->id) }}" class="text-primary-green hover:text-green-700 mr-3">Lihat</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                {{ $messages->links() }}
-            </div>
-        @else
-            <div class="p-6 text-center text-gray-500">
-                Tidak ada pesan yang tersedia
-            </div>
-        @endif
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Pesan</h6>
+        </div>
+        <div class="card-body">
+            @if($messages->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject</th>
+                                <th>Pengirim</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($messages as $message)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $message->subject }}</td>
+                                    <td>{{ $message->user->name }}</td>
+                                    <td>{{ $message->created_at->format('d M Y H:i') }}</td>
+                                    <td>
+                                        @if($message->replied_at)
+                                            <span class="badge badge-success">Telah dibalas</span>
+                                        @else
+                                            <span class="badge badge-warning">Belum dibalas</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.messages.show', $message->id) }}" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    {{ $messages->links() }}
+                </div>
+            @else
+                <div class="alert alert-info">
+                    Tidak ada pesan yang masuk.
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 @endsection
