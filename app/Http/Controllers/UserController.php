@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\PantiAsuhan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -105,16 +106,35 @@ class UserController extends Controller
             ], 403);
         }
 
-        // Hapus avatar jika ada
-        if ($user->avatar && Storage::exists($user->avatar)) {
-            Storage::delete($user->avatar);
+        // Hapus data panti asuhan dan filenya jika user adalah pengurus panti
+        if ($user->role === 'panti') {
+            $pantiAsuhan = PantiAsuhan::where('user_id', $user->id)->first();
+            if ($pantiAsuhan) {
+                // Hapus foto profil panti jika ada
+                if ($pantiAsuhan->foto_profil && Storage::disk('public')->exists($pantiAsuhan->foto_profil)) {
+                    Storage::disk('public')->delete($pantiAsuhan->foto_profil);
+                }
+                // Hapus dokumen verifikasi panti jika ada
+                if ($pantiAsuhan->dokumen_verifikasi && Storage::disk('public')->exists($pantiAsuhan->dokumen_verifikasi)) {
+                    Storage::disk('public')->delete($pantiAsuhan->dokumen_verifikasi);
+                }
+                // Hapus record panti dari database
+                $pantiAsuhan->delete();
+            }
         }
 
+        // Hapus avatar user jika ada
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // Hapus user dari database
         $user->delete();
 
+        // Kembalikan response sukses dalam format JSON
         return response()->json([
             'success' => true,
-            'message' => 'User berhasil dihapus'
+            'message' => 'User beserta data terkait berhasil dihapus'
         ]);
     }
 }
