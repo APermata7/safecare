@@ -43,11 +43,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // admin routes only
     Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('/', function () {
-            return view('admin.messages.index');
+            return view('admin.messages');
         })->name('admin');
 
         Route::get('/users', function () {
-            return view('admin.users.index');
+            return view('admin.users');
         })->name('admin.users');
 
         Route::get('/panti', function () {
@@ -55,8 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('admin.panti');
 
         Route::get('/transaksi', function () {
-            return view('admin.transaksi.index');
-        })->name('admin.transaksi.index');
+            return view('admin.transaksi');
+        })->name('admin.transaksi');
 
         Route::get('/api', [MessageController::class, 'adminIndex'])->name('adminApi');
         Route::get('/{id}', [MessageController::class, 'show'])->name('admin.show');
@@ -76,8 +76,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/panti/{id}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
 
         Route::get('/transaksi/api', [TransaksiController::class, 'adminTransactionHistory']);
-        Route::get('/transaksi/{id}', [TransaksiController::class, 'adminTransactionDetail']);
-
+        Route::get('/transaksi/{id}', [TransaksiController::class, 'showDetail']);
+        Route::put('/transaksi/{id}', [TransaksiController::class, 'update']);
     });
 });
 

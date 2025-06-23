@@ -5,7 +5,7 @@
             <div class="flex flex-col md:flex-row gap-6">
                 <!-- Sidebar -->
                 <aside class="w-full md:w-64">
-                    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                         <nav class="flex flex-col">
                             <a href="{{ url('/admin') }}"
                                class="flex-1 md:flex-none px-6 py-4 font-semibold text-gray-700 flex items-center gap-2
@@ -27,7 +27,7 @@
                             </a>
                             <a href="{{ url('/admin/transaksi') }}"
                                class="flex-1 md:flex-none px-6 py-4 font-semibold text-gray-700 flex items-center gap-2
-                               {{ request()->routeIs('admin.transaksi.index') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
+                               {{ request()->routeIs('admin.transaksi') ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
                                 <i class="fa-solid fa-exchange-alt mr-2"></i>
                                 Manajemen Transaksi
                             </a>

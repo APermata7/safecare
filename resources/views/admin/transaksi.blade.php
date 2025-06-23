@@ -57,21 +57,28 @@
                 </div>
 
                 <form id="updateStatusForm" class="space-y-4 pt-4 border-t mt-4">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" id="updateTransactionId">
-                    <div>
-                        <label for="newStatus" class="block text-sm font-medium text-gray-700">Ubah Status:</label>
-                        <select id="newStatus" name="status" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50" required>
-                            <option value="waiting confirmation">Waiting Confirmation</option>
-                            <option value="success">Success</option>
-                            <option value="canceled">Canceled</option>
-                        </select>
-                    </div>
-                    <div class="flex justify-end">
-                        <x-primary-button type="submit" id="updateStatusButton">Update Status</x-primary-button>
-                    </div>
-                </form>
+    @csrf
+    @method('PUT')
+    <input type="hidden" id="updateTransactionId">
+    <div>
+        <label for="newStatus" class="block text-sm font-medium text-gray-700">Update Status:</label>
+        <select id="newStatus" name="status" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50" required>
+            <option value="waiting confirmation">Waiting Confirmation</option>
+            <option value="success">Success</option>
+            <option value="canceled">Canceled</option>
+        </select>
+    </div>
+    <div>
+        <label for="newPaymentMethod" class="block text-sm font-medium text-gray-700">Update Metode Pembayaran:</label>
+        <select id="newPaymentMethod" name="payment_method" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-green focus:ring-primary-green focus:ring-opacity-50">
+            <option value="bank transfer">Bank Transfer</option>
+            <option value="QRIS">QRIS</option>
+        </select>
+    </div>
+    <div class="flex justify-end">
+        <x-primary-button type="submit" id="updateStatusButton">Update</x-primary-button>
+    </div>
+</form>
             </div>
         </div>
     </div>
@@ -83,6 +90,7 @@
             const updateStatusForm = document.getElementById('updateStatusForm');
             const updateTransactionIdInput = document.getElementById('updateTransactionId');
             const newStatusSelect = document.getElementById('newStatus');
+            const newPaymentMethodSelect = document.getElementById('newPaymentMethod');
             const updateStatusButton = document.getElementById('updateStatusButton');
 
             // Function to fetch and display transactions
@@ -108,7 +116,7 @@
                                         <p class="text-sm text-gray-500">${new Date(transaksi.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
-                                        <p class="font-bold text-primary-green">Rp ${numberFormat(transaksi.amount)}</p>
+                                        <p class="font-bold text-primary-green">Rp${numberFormat(transaksi.amount)}</p>
                                         <span class="px-3 py-1 text-xs font-semibold rounded-full ${statusClass}">
                                             ${transaksi.status.toUpperCase()}
                                         </span>
@@ -164,7 +172,7 @@
                     document.getElementById('modalOrderId').textContent = transaksi.order_id;
                     document.getElementById('modalDonorName').textContent = transaksi.user ? transaksi.user.name : 'Donatur Dihapus';
                     document.getElementById('modalPantiName').textContent = transaksi.panti ? transaksi.panti.nama_panti : 'Panti Dihapus';
-                    document.getElementById('modalAmount').textContent = `Rp ${numberFormat(transaksi.amount)}`;
+                    document.getElementById('modalAmount').textContent = `Rp${numberFormat(transaksi.amount)}`;
                     document.getElementById('modalPaymentMethod').textContent = transaksi.payment_method || 'N/A';
                     document.getElementById('modalCreatedAt').textContent = new Date(transaksi.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' });
 
@@ -174,7 +182,7 @@
 
                     updateTransactionIdInput.value = transaksi.id;
                     newStatusSelect.value = transaksi.status; // Set current status in dropdown
-
+                    newPaymentMethodSelect.value = transaksi.payment_method || 'bank transfer';
                     transactionDetailModal.classList.remove('hidden');
                 } catch (error) {
                     console.error('Error fetching transaction detail:', error);
@@ -208,19 +216,20 @@
 
                 const transactionId = updateTransactionIdInput.value;
                 const newStatus = newStatusSelect.value;
+                const newPaymentMethod = newPaymentMethodSelect.value;
 
                 updateStatusButton.disabled = true;
                 updateStatusButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengupdate...';
 
                 try {
-                    const response = await fetch(`/admin/transaksi/${transactionId}/update-status`, {
+                    const response = await fetch(`/admin/transaksi/${transactionId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
-                        body: JSON.stringify({ status: newStatus })
+                        body: JSON.stringify({ status: newStatus, payment_method: newPaymentMethod })
                     });
 
                     if (!response.ok) {

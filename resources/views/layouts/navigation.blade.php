@@ -46,7 +46,7 @@
                         <!-- Manajemen Pesan Admin -->
                         <a href="{{ route('admin') }}"
                             class="px-4 py-2 text-sm font-semibold rounded-full transition
-                                  {{ request()->routeIs(['admin', 'admin.users', 'admin.panti', 'admin.transaksi.index']) ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
+                                  {{ request()->routeIs(['admin', 'admin.users', 'admin.panti', 'admin.transaksi']) ? 'bg-primary-green text-white shadow-sm' : 'text-gray-600 hover:text-primary-green' }}">
                             {{ __('Admin') }}
                         </a>
                     @endif

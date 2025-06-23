@@ -143,33 +143,70 @@ class TransaksiController extends Controller
         ]);
     }
 
+    public function showDetail($id)
+{
+    $transaksi = Transaksi::with(['user', 'panti'])->findOrFail($id);
+
+    return response()->json([
+        'success' => true,
+        'transaksi' => [
+            'id' => $transaksi->id,
+            'order_id' => $transaksi->order_id,
+            'amount' => $transaksi->amount,
+            'status' => $transaksi->status,
+            'created_at' => $transaksi->created_at,
+            'updated_at' => $transaksi->updated_at,
+            'payment_method' => $transaksi->payment_method,
+            'hide_name' => $transaksi->hide_name,
+            // Data user
+            'user' => $transaksi->user ? [
+                'id' => $transaksi->user->id,
+                'name' => $transaksi->user->name,
+                'email' => $transaksi->user->email,
+            ] : null,
+            // Data panti
+            'panti' => $transaksi->panti ? [
+                'id' => $transaksi->panti->id,
+                'nama_panti' => $transaksi->panti->nama_panti,
+                'alamat' => $transaksi->panti->alamat,
+            ] : null,
+        ]
+    ]);
+}
+
     /**
      * Memperbarui status transaksi.
      * Biasanya dipanggil oleh admin untuk menandai bahwa transfer ke panti sudah dilakukan.
      */
-    public function updateTransactionStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:waiting confirmation,success,canceled',
-        ]);
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'sometimes|required|in:waiting confirmation,success,canceled',
+        'payment_method' => 'sometimes|required|in:bank transfer,QRIS',
+    ]);
 
-        $transaksi = Transaksi::findOrFail($id);
+    $transaksi = Transaksi::findOrFail($id);
 
-        // Hanya admin yang boleh mengubah status ke 'success' atau 'canceled' secara manual
-        if (auth()->user()->role !== 'admin') {
-            return response()->json([
-                'message' => 'Unauthorized. Hanya admin yang dapat mengubah status transaksi.'
-            ], 403);
-        }
-
-        $transaksi->status = $request->status;
-        $transaksi->save();
-
+    // Hanya admin yang boleh mengubah status
+    if ($request->has('status') && auth()->user()->role !== 'admin') {
         return response()->json([
-            'message' => 'Status transaksi berhasil diperbarui.',
-            'transaksi' => $transaksi
-        ]);
+            'message' => 'Unauthorized. Hanya admin yang dapat mengubah status transaksi.'
+        ], 403);
     }
+
+    if ($request->has('status')) {
+        $transaksi->status = $request->status;
+    }
+    if ($request->has('payment_method')) {
+        $transaksi->payment_method = $request->payment_method;
+    }
+    $transaksi->save();
+
+    return response()->json([
+        'message' => 'Transaksi berhasil diperbarui.',
+        'transaksi' => $transaksi
+    ]);
+}
   
     public function showHistoryPanti($pantiId)
     {
