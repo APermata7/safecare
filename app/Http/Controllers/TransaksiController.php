@@ -78,13 +78,96 @@ class TransaksiController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Midtrans Error: '.$e->getMessage());
+            \Log::error('Midtrans Error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Terjadi kesalahan saat memproses pembayaran'
             ], 500);
         }
     }
+  
+  public function userDonationHistory()
+    {
+        // Pastikan user sudah login
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login untuk melihat riwayat donasi.');
+        }
 
+        $transaksis = Transaksi::where('user_id', auth()->id())
+            ->with('panti') // Ambil data panti asuhan terkait
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('donasi.riwayat', compact('transaksis'));
+    }
+
+    /**
+     * Menampilkan riwayat transaksi donasi yang diterima oleh panti asuhan yang dikelola user.
+     */
+    public function pantiDonationHistory()
+    {
+        // Pastikan user sudah login dan role-nya adalah 'panti'
+        if (!auth()->check() || auth()->user()->role !== 'panti') {
+            abort(403, 'Akses Dilarang. Hanya pengurus panti yang dapat melihat halaman ini.');
+        }
+
+        // Ambil ID panti asuhan yang dikelola oleh user yang sedang login
+        $pantiAsuhanId = auth()->user()->pantiAsuhan->id ?? null;
+
+        if (!$pantiAsuhanId) {
+            // Jika user dengan role 'panti' tapi belum punya data panti asuhan
+            return view('panti.donasi-diterima', ['transaksis' => collect([])])
+                ->with('info', 'Anda belum memiliki data panti asuhan terdaftar. Silakan lengkapi profil panti Anda.');
+        }
+
+        $transaksis = Transaksi::where('panti_id', $pantiAsuhanId)
+            ->where('status', 'success') // Hanya tampilkan donasi yang berhasil
+            ->with('user') // Ambil data donatur terkait
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('panti.donasi-diterima', compact('transaksis'));
+    }
+
+    /**
+     * Menampilkan semua riwayat transaksi untuk admin.
+     */
+    public function adminTransactionHistory()
+    {
+        $transaksis = Transaksi::with(['user', 'panti'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.transaksi.index', compact('transaksis'));
+    }
+
+    /**
+     * Memperbarui status transaksi.
+     * Biasanya dipanggil oleh admin untuk menandai bahwa transfer ke panti sudah dilakukan.
+     */
+    public function updateTransactionStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:waiting confirmation,success,canceled',
+        ]);
+
+        $transaksi = Transaksi::findOrFail($id);
+
+        // Hanya admin yang boleh mengubah status ke 'success' atau 'canceled' secara manual
+        if (auth()->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Unauthorized. Hanya admin yang dapat mengubah status transaksi.'
+            ], 403);
+        }
+
+        $transaksi->status = $request->status;
+        $transaksi->save();
+
+        return response()->json([
+            'message' => 'Status transaksi berhasil diperbarui.',
+            'transaksi' => $transaksi
+        ]);
+    }
+  
     public function showHistoryPanti($pantiId)
     {
         // Validasi apakah panti exists
@@ -130,7 +213,7 @@ class TransaksiController extends Controller
                 'order_id' => $transaksi->order_id,
                 'amount' => number_format($transaksi->amount, 0, ',', '.'),
                 'status' => $transaksi->status,
-                'created_at' => $transaksi->created_at->translatedFormat('j F Y \p\u\k\u\l H.i'),
+                'created_at' => $transaksi->created_at->format('d F Y, H:i'),
                 'payment_method' => $transaksi->payment_method,
                 'hide_name' => $transaksi->hide_name
             ];
@@ -143,7 +226,6 @@ class TransaksiController extends Controller
             'panti' => $panti->only(['id', 'nama_panti'])
         ]);
     }
-
     // riwayat transaksi yang dikirim user sedang login
 
     // riwayat transaksi yang diterima panti asuhan

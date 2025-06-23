@@ -142,7 +142,7 @@
                                                 <div class="p-4 bg-white rounded-2xl border shadow-sm">
                                                     <div class="flex justify-between items-center">
                                                         <div class="text-sm">
-                                                            <p class="font-medium text-gray-600">{{ $transaksi->created_at->format('d M Y, H:i') }}</p>
+                                                            <p class="font-medium text-gray-600">{{ $transaksi->created_at->format('d F Y, H:i') }}</p>
                                                             <p class="text-xs text-gray-500">ID: {{ $transaksi->order_id }}</p>
                                                         </div>
                                                         <div class="text-right">
@@ -218,7 +218,7 @@
                         const totalAmount = response.data.total_amount; // Ambil total amount
                         // Tampilkan total amount
                         document.getElementById('totalAmountDonasi').innerHTML = 
-                            `Total Donasi Terkumpul: <span class="font-bold">${totalAmount ? 'Rp' + totalAmount : 'Rp0'}</span>`;
+                            `Total Donasi Diterima Terkumpul: <span class="font-bold">${totalAmount ? 'Rp' + totalAmount : 'Rp0'}</span>`;
                             
                         if (transactions.length === 0) {
                             container.innerHTML = `

@@ -1,5 +1,6 @@
 @php
-// Data Dummy
+// Data Dummy ini dihapus atau dikomentari
+/*
 $transaksis = collect([
     (object)[
         'user' => (object)['name' => 'Budi Santoso'],
@@ -20,6 +21,7 @@ $transaksis = collect([
         'status' => 'done',
     ],
 ]);
+*/
 @endphp
 
 <x-app-layout>
@@ -31,18 +33,25 @@ $transaksis = collect([
                 </h2>
             </div>
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-6 md:p-8">
+                @if(session('info'))
+                    <div class="mb-4 p-4 bg-blue-100 text-blue-700 rounded-lg shadow">
+                        {{ session('info') }}
+                    </div>
+                @endif
+
                 <div class="space-y-4">
                     @forelse($transaksis as $transaksi)
                         <div class="p-4 border rounded-xl flex justify-between items-center hover:bg-gray-50 transition">
                             <div>
-                                <p class="font-bold text-gray-800">Donasi dari: {{ $transaksi->user->name }}</p>
+                                {{-- Pastikan relasi user sudah di-load --}}
+                                <p class="font-bold text-gray-800">Donasi dari: {{ $transaksi->user->name ?? 'Donatur Dihapus/Anonim' }}</p>
                                 <p class="text-sm text-gray-500">{{ $transaksi->created_at->format('d F Y, H:i') }}</p>
                             </div>
                             <div class="text-right">
                                 <p class="font-bold text-lg text-primary-green">Rp {{ number_format($transaksi->amount, 0, ',', '.') }}</p>
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                             @if($transaksi->status === 'done') bg-green-100 text-green-800
-                                             @elseif($transaksi->status === 'pending') bg-yellow-100 text-yellow-800
+                                             @if($transaksi->status === 'success') bg-green-100 text-green-800
+                                             @elseif($transaksi->status === 'waiting confirmation') bg-yellow-100 text-yellow-800
                                              @else bg-red-100 text-red-800 @endif">{{ strtoupper($transaksi->status) }}
                                 </span>
                             </div>
