@@ -29,16 +29,21 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
         // Redirect berdasarkan role
-        return match ($user->role) {
-            'panti' => redirect()->route('panti.dashboard'),
-            'donatur' => redirect()->route('donatur.dashboard'),
-            default => redirect()->intended(route('dashboard'))
-        };
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->role === 'panti') {
+        // Tetap arahkan ke dashboard utama untuk sementara
+        // Bisa diubah ke route('panti.dashboard') jika sudah siap
+        return redirect()->route('dashboard');
+    } elseif ($user->role === 'donatur') {
+        // Tetap arahkan ke dashboard utama untuk sementara
+        // Bisa diubah ke route('donatur.dashboard') jika sudah siap
+        return redirect()->route('dashboard');
+    }
+
+    // Fallback
+    return redirect()->intended(route('dashboard'));
     }
 
     /**

@@ -16,24 +16,41 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [PantiAsuhanController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Authenticated routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard utama (untuk semua role)
+    Route::get('/dashboard', [PantiAsuhanController::class, 'index'])
+        ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+    // Profile routes (untuk semua user)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/panti-asuhan', [PantiAsuhanController::class, 'index']);
+    // Detail panti (untuk semua user)
     Route::get('/panti-asuhan/{id}', [PantiAsuhanController::class, 'show'])->name('panti.show');
     Route::post('/donasi', [TransaksiController::class, 'createDonation'])->name('donasi.create');
 
-    Route::get('/pesan', [MessageController::class, 'index']);
-    Route::get('/pesan/{id}', [MessageController::class, 'show']);
-    Route::post('/pesan', [MessageController::class, 'store']);
+    // Message routes
+    Route::get('/pesan', [MessageController::class, 'index'])->name('pesan.index');
+    Route::get('/pesan/{id}', [MessageController::class, 'show'])->name('pesan.show');
+    Route::post('/pesan', [MessageController::class, 'store'])->name('pesan.store');
+
+    // Dashboard khusus panti (hanya untuk role panti)
+    Route::middleware('role:panti')->prefix('panti')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('panti.dashboard');
+        })->name('panti.dashboard');
+        
+        // Tambahkan route khusus panti lainnya di sini
+    });
+
+    // Dashboard khusus donatur (hanya untuk role donatur)
+    Route::middleware('role:donatur')->prefix('donatur')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('donatur.dashboard');
+        })->name('donatur.dashboard');
+    });
 
     Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
         // Dashboard

@@ -4,9 +4,10 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <div class="bg-white rounded-xl shadow-md p-6">
+    <div class="bg-white shadow-xl rounded-lg p-6 border border-gray-100">
+        <!-- Tombol Kembali -->
         <div class="mb-6">
-            <a href="{{ route('admin.panti.index') }}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
+            <a href="{{ route('admin.panti.index') }}" class="inline-flex items-center text-primary-500 hover:text-primary-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                 </svg>
@@ -14,8 +15,10 @@
             </a>
         </div>
 
+        <!-- Judul -->
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Tambah Panti Asuhan Baru</h2>
 
+        <!-- Notifikasi Error -->
         @if ($errors->any())
             <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
                 <div class="flex">
@@ -38,6 +41,7 @@
             </div>
         @endif
 
+        <!-- Form -->
         <form method="POST" action="{{ route('admin.panti.store') }}" enctype="multipart/form-data">
             @csrf
             
@@ -47,49 +51,55 @@
                     <h3 class="text-lg font-medium text-gray-900 mb-4 pb-2 border-b border-gray-200">Informasi Dasar</h3>
                 </div>
 
+                <!-- Nama Panti -->
                 <div>
                     <label for="nama_panti" class="block text-sm font-medium text-gray-700 mb-1">Nama Panti Asuhan*</label>
                     <input type="text" id="nama_panti" name="nama_panti" value="{{ old('nama_panti') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
                            placeholder="Contoh: Panti Asuhan Bahagia" required>
                 </div>
 
+                <!-- Pengurus -->
                 <div>
                     <label for="pengurus" class="block text-sm font-medium text-gray-700 mb-1">Nama Pengurus*</label>
                     <input type="text" id="pengurus" name="pengurus" value="{{ old('pengurus') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
-                           placeholder="Nama pengurus" required>
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
+                           placeholder="Nama pengurus panti" required>
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap*</label>
-                    <textarea id="alamat" name="alamat" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
-                              placeholder="Jl. Contoh No. 123, Kota, Provinsi" required>{{ old('alamat') }}</textarea>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Panti*</label>
-                    <textarea id="deskripsi" name="deskripsi" rows="5" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
-                              placeholder="Deskripsikan kondisi panti, jumlah anak asuh, fasilitas, dll." required>{{ old('deskripsi') }}</textarea>
-                </div>
-
-                <!-- Kontak dan Rekening -->
-                <div class="md:col-span-2 mt-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 pb-2 border-b border-gray-200">Kontak dan Rekening</h3>
-                </div>
-
+                <!-- Kontak -->
                 <div>
                     <label for="kontak" class="block text-sm font-medium text-gray-700 mb-1">Nomor Kontak*</label>
                     <input type="text" id="kontak" name="kontak" value="{{ old('kontak') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
                            placeholder="Contoh: 081234567890" required>
                 </div>
 
+                <!-- Alamat -->
+                <div class="md:col-span-2">
+                    <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap*</label>
+                    <textarea id="alamat" name="alamat" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
+                              placeholder="Jl. Contoh No. 123, Kota, Provinsi" required>{{ old('alamat') }}</textarea>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="md:col-span-2">
+                    <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Panti*</label>
+                    <textarea id="deskripsi" name="deskripsi" rows="5" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
+                              placeholder="Deskripsikan kondisi panti, jumlah anak asuh, fasilitas, dll." required>{{ old('deskripsi') }}</textarea>
+                </div>
+
+                <!-- Informasi Rekening -->
+                <div class="md:col-span-2 mt-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 pb-2 border-b border-gray-200">Informasi Rekening</h3>
+                </div>
+
+                <!-- Bank -->
                 <div>
                     <label for="bank" class="block text-sm font-medium text-gray-700 mb-1">Bank*</label>
-                    <select id="bank" name="bank" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" required>
+                    <select id="bank" name="bank" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" required>
                         <option value="">Pilih Bank</option>
                         <option value="BCA" {{ old('bank') == 'BCA' ? 'selected' : '' }}>BCA</option>
                         <option value="BRI" {{ old('bank') == 'BRI' ? 'selected' : '' }}>BRI</option>
@@ -99,45 +109,51 @@
                     </select>
                 </div>
 
+                <!-- Nomor Rekening -->
                 <div>
                     <label for="nomor_rekening" class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening*</label>
                     <input type="text" id="nomor_rekening" name="nomor_rekening" value="{{ old('nomor_rekening') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
                            placeholder="Contoh: 1234567890" required>
                 </div>
 
                 <!-- Dokumen dan Foto -->
-                <div class="md:col-span-2 mt-6">
+                <div class="md:col-span-2 mt-4">
                     <h3 class="text-lg font-medium text-gray-900 mb-4 pb-2 border-b border-gray-200">Dokumen dan Foto</h3>
                 </div>
 
+                <!-- Foto Profil -->
                 <div>
                     <label for="foto_profil" class="block text-sm font-medium text-gray-700 mb-1">Foto Profil Panti*</label>
                     <div class="mt-1 flex items-center">
                         <input type="file" id="foto_profil" name="foto_profil" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
                                accept="image/jpeg,image/png" required>
                     </div>
                     <p class="mt-1 text-sm text-gray-500">Format: JPEG/PNG (max: 2MB)</p>
                 </div>
 
+                <!-- Dokumen Verifikasi -->
                 <div>
                     <label for="dokumen_verifikasi" class="block text-sm font-medium text-gray-700 mb-1">Dokumen Verifikasi*</label>
                     <div class="mt-1 flex items-center">
                         <input type="file" id="dokumen_verifikasi" name="dokumen_verifikasi" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150" 
                                accept=".pdf,.jpg,.jpeg,.png" required>
                     </div>
                     <p class="mt-1 text-sm text-gray-500">Format: PDF/JPEG/PNG (max: 5MB)</p>
                 </div>
             </div>
 
+            <!-- Tombol Aksi -->
             <div class="flex justify-end space-x-4 border-t border-gray-200 pt-6">
-                <a href="{{ route('admin.panti.index') }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                <a href="{{ route('admin.panti.index') }}" 
+                   class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
                     Batal
                 </a>
-                <button type="submit" class="bg-primary-600 text-white px-6 py-2 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                    Simpan Panti Asuhan
+                <button type="submit" 
+                        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200 flex items-center">
+                    <i class="fas fa-save mr-2"></i> Simpan Panti Asuhan
                 </button>
             </div>
         </form>

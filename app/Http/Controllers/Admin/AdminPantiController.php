@@ -9,10 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminPantiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pantis = PantiAsuhan::latest()->paginate(10);
-        return view('admin.pantis.index', compact('pantis'));
+        $search = $request->input('search');
+
+        $pantis = PantiAsuhan::when($search, function ($query) use ($search) {
+            return $query->where('nama_panti', 'like', '%' . $search . '%')
+                ->orWhere('kontak', 'like', '%' . $search . '%')
+                ->orWhere('alamat', 'like', '%' . $search . '%');
+        })
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.pantis.index', compact('pantis', 'search'));
     }
 
     public function create()
@@ -24,7 +33,7 @@ class AdminPantiController extends Controller
     {
         $validated = $request->validate([
             'nama_panti' => 'required|string|max:255',
-            'pengurus' => 'required|string|max:255',
+            'pengurus' => 'required|string|max:255', // Ini sudah benar
             'alamat' => 'required|string',
             'deskripsi' => 'required|string',
             'kontak' => 'required|string|max:20',
@@ -44,7 +53,7 @@ class AdminPantiController extends Controller
             $validated['dokumen_verifikasi'] = $request->file('dokumen_verifikasi')->store('panti/dokumen', 'public');
         }
 
-        $validated['status_verifikasi'] = 'terverifikasi'; // Default status verifikasi
+        $validated['status_verifikasi'] = 'verified';
         $validated['user_id'] = auth()->id(); // Assign ke user yang login
 
         PantiAsuhan::create($validated);
@@ -109,7 +118,7 @@ class AdminPantiController extends Controller
         if ($panti->dokumen_verifikasi) {
             Storage::disk('public')->delete($panti->dokumen_verifikasi);
         }
-        
+
         $panti->delete();
 
         return redirect()->route('admin.panti.index')

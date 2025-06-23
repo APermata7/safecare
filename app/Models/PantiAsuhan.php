@@ -11,25 +11,33 @@ class PantiAsuhan extends Model
 
     protected $table = 'panti_asuhan';
     protected $fillable = [
-        'user_id', 'nama_panti', 'pengurus', 'alamat', 'deskripsi', 
-        'foto_profil', 'dokumen_verifikasi', 'status_verifikasi',
-        'nomor_rekening', 'bank', 'kontak'
+        'user_id', 
+        'nama_panti', 
+        'pengurus', // Pastikan ini ada
+        'alamat', 
+        'deskripsi', 
+        'foto_profil', 
+        'dokumen_verifikasi', 
+        'status_verifikasi',
+        'nomor_rekening', 
+        'bank', 
+        'kontak'
     ];
 
     protected $keyType = 'string';
     public $incrementing = false;
 
-    // Status verifikasi
-    const STATUS_MENUNGGU = 'menunggu';
-    const STATUS_TERVERIFIKASI = 'terverifikasi';
-    const STATUS_DITOLAK = 'ditolak';
+    // Sesuaikan dengan enum di migration
+    const STATUS_TERVERIFIKASI = 'verified';
+    const STATUS_MENUNGGU = 'unverified'; // atau bisa juga dibuat 'pending' jika lebih sesuai
+    const STATUS_DITOLAK = 'rejected'; // Tambahkan jika diperlukan
 
     public function getStatusLabelAttribute()
     {
         $statuses = [
-            self::STATUS_MENUNGGU => 'Menunggu Verifikasi',
             self::STATUS_TERVERIFIKASI => 'Terverifikasi',
-            self::STATUS_DITOLAK => 'Ditolak'
+            self::STATUS_MENUNGGU => 'Menunggu Verifikasi',
+            self::STATUS_DITOLAK => 'Ditolak' // Jika diperlukan
         ];
 
         return $statuses[$this->status_verifikasi] ?? $this->status_verifikasi;

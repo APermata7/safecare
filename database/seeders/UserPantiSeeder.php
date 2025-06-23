@@ -53,6 +53,7 @@ class UserPantiSeeder extends Seeder
         PantiAsuhan::create([
             'user_id' => $userPanti->id,
             'nama_panti' => 'Panti Asuhan Lidwina',
+            'pengurus' => 'Ibu Lidwina',
             'alamat' => 'Jl. Kebon Jeruk No. 123, Jakarta Barat',
             'deskripsi' => 'Panti asuhan untuk anak yatim dan dhuafa',
             'foto_profil' => $this->storePantiImage('dummy_files/panti_images/panti1.jpg', 'panti1.jpg'),
@@ -77,6 +78,7 @@ class UserPantiSeeder extends Seeder
         PantiAsuhan::create([
             'user_id' => $userPanti->id,
             'nama_panti' => 'Panti Asuhan Hayao',
+            'pengurus' => 'Bapak Hayao',
             'alamat' => 'Jl. H. Djuanda No. 255, Jawa Barat',
             'deskripsi' => 'Panti asuhan anak yatim piatu',
             'foto_profil' => $this->storePantiImage('dummy_files/panti_images/panti2.jpg', 'panti2.jpg'),
@@ -101,6 +103,7 @@ class UserPantiSeeder extends Seeder
         PantiAsuhan::create([
             'user_id' => $userPanti->id,
             'nama_panti' => 'Panti Asuhan Steve',
+            'pengurus' => 'Bapak Steve',
             'alamat' => 'Jl. Veteran No. 555, Jawa Timur',
             'deskripsi' => 'Panti asuhan anak piatu dan yatim',
             'foto_profil' => $this->storePantiImage('dummy_files/panti_images/panti3.jpg', 'panti3.jpg'),
