@@ -103,6 +103,10 @@
             class="{{ request()->routeIs('donasi.riwayat') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
             {{ __('Riwayat Donasi') }}
         </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('customer.service')" :active="request()->routeIs('customer.service')"
+            class="{{ request()->routeIs('customer.service') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
+            {{ __('Customer Service') }}
+        </x-responsive-nav-link>
         @can('view-panti-history')
             <x-responsive-nav-link :href="route('panti.donasi.diterima')" :active="request()->routeIs('panti.donasi.diterima')"
                 class="{{ request()->routeIs('panti.donasi.diterima') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
@@ -112,15 +116,7 @@
         @if(Auth::user()->role === 'admin')
             <x-responsive-nav-link :href="route('admin')" :active="request()->routeIs('admin.index')"
                 class="{{ request()->routeIs('admin') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
-                {{ __('Pesan') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')"
-                class="{{ request()->routeIs('admin.users') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
-                {{ __('Users') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('get.panti')" :active="request()->routeIs('get.panti')"
-                class="{{ request()->routeIs('get.panti') ? 'bg-primary-green text-white shadow-sm border-l-4 border-primary-green' : 'text-gray-600 hover:text-primary-green border-l-4 border-transparent' }}">
-                {{ __('Panti Asuhan') }}
+                {{ __('Admin') }}
             </x-responsive-nav-link>
         @endif
         </div>

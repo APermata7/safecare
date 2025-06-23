@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <div class="flex justify-center">
                 <h2 class="font-semibold text-lg text-gray-700 bg-white shadow-sm rounded-full px-8 py-3">
-                    Manajemen User
+                    Manajemen Users
                 </h2>
             </div>
 
@@ -43,16 +43,22 @@
 
                         usersListContainer.innerHTML += `
                         <div class="relative flex flex-col sm:flex-row bg-white border rounded-2xl shadow-sm p-6 gap-4">
-                            <div class="flex-shrink-0 flex items-center">
-                                <img src="${avatarUrl}" alt="Avatar" class="w-16 h-16 rounded-full object-cover border">
-                            </div>
                             <div class="flex-1 flex flex-col justify-between">
                                 <div>
                                     <div class="flex justify-between items-start">
                                         <div>
+                                        <img src="${avatarUrl}" alt="Avatar" class="w-12 h-12 rounded-full object-cover border">
                                             <p class="font-bold text-lg text-gray-800">${user.name}</p>
                                             <p class="text-sm text-gray-500">${user.email}</p>
-                                            <span class="inline-block mt-1 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">${user.role}</span>
+                                            <span class="inline-block mt-1 px-2 py-1 text-xs rounded-full ${
+                                                user.role === 'donatur' 
+                                                    ? 'bg-blue-100 text-blue-800' 
+                                                    : user.role === 'panti' 
+                                                        ? 'bg-purple-100 text-purple-800' 
+                                                        : 'bg-gray-100 text-gray-600'
+                                            }">
+                                                ${user.role}
+                                            </span>
                                         </div>
                                         <span class="px-3 py-1 text-xs font-semibold rounded-full ${statusClass}">
                                             ${user.status === 'active' ? 'Active' : 'Banned'}

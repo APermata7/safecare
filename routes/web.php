@@ -67,13 +67,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/users/{id}/unban', [UserController::class, 'unban'])->name('unban');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('delete.user');
 
-        Route::get('/client', [UserController::class, 'getDonatorOnly'])->name('admin.getDonator');
-        Route::get('/client/panti', [UserController::class, 'getPantiAsuhanList'])->name('get.panti');
-        Route::put('/client/{id}/role', [UserController::class, 'updateRole'])->name('update.role');
-
-        Route::get('/panti/api', [PantiAsuhanController::class, 'indexAdmin'])->name('admin.panti.index');
-        Route::get('/panti/{id}', [PantiAsuhanController::class, 'showAdmin'])->name('admin.panti.show');
-        Route::put('/panti/{id}', [PantiAsuhanController::class, 'update'])->name('admin.panti.update');
+        Route::get('/panti/api', [PantiAsuhanController::class, 'indexAdmin']);
+        Route::get('/panti/{id}', [PantiAsuhanController::class, 'showAdmin']);
+        Route::put('/panti/{id}/verified', [PantiAsuhanController::class, 'updateToVerified']);
+        Route::put('/panti/{id}/unverified', [PantiAsuhanController::class, 'updateToUnverified']);
+        Route::delete('/panti/{id}', [PantiAsuhanController::class, 'destroy']);
 
         Route::get('/transaksi/api', [TransaksiController::class, 'adminTransactionHistory']);
         Route::get('/transaksi/{id}', [TransaksiController::class, 'showDetail']);

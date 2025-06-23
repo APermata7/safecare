@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-6 md:p-8">
                 <div class="space-y-4" id="transactions-list">
                     <div class="text-center py-12 border-2 border-dashed rounded-xl">
-                        <i class="fa-solid fa-money-bill-transfer text-5xl text-gray-300 mb-4"></i>
+                        <i class="fa-solid fa-exchange-alt text-5xl text-gray-300 mb-4"></i>
                         <p class="text-gray-500">Memuat transaksi...</p>
                     </div>
                 </div>
