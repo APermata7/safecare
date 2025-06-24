@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->enum('judul', ['Feedback', 'Request panti user'])->default('Feedback');
             $table->enum('role', ['donatur', 'panti', 'admin'])->default('donatur');
             $table->text('message');

@@ -140,10 +140,13 @@
                 </div>
                 <div id="userModalMessageFileContainer" class="hidden">
                     <p class="text-sm text-gray-500">Lampiran:</p>
-                    <a id="userModalMessageFile" href="#" target="_blank" class="text-blue-600 hover:underline">Lihat Lampiran</a>
+                    <a id="userModalMessageFile" href="#" target="_blank" class="text-primary-green hover:underline">Lihat Lampiran</a>
                 </div>
                 <div id="userModalMessageReplyContainer" class="p-4 bg-gray-100 rounded-xl border border-gray-200">
-                    <p class="text-sm text-gray-500">Balasan Admin:</p>
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-sm text-gray-500">Balasan Admin:</p>
+                        <p id="userModalMessageReplyDate" class="text-xs text-gray-400"></p>
+                    </div>
                     <p id="userModalMessageReply" class="text-gray-700 whitespace-pre-line font-medium"></p>
                 </div>
             </div>
@@ -289,6 +292,7 @@
                                     <div class="mb-2 sm:mb-0">
                                         <p class="font-bold text-gray-800">Subjek: ${message.judul}</p>
                                         <p class="text-sm text-gray-500">${new Date(message.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
+                                        <p class="text-sm text-gray-600">Dibalas pada: ${new Date(message.updated_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
                                         ${message.reply ?
@@ -344,11 +348,23 @@
 
                     const replyDisplay = document.getElementById('userModalMessageReply');
                     const replyDisplayContainer = document.getElementById('userModalMessageReplyContainer');
+                    const replyDate = document.getElementById('userModalMessageReplyDate');
                     if (message.reply) {
                         replyDisplay.textContent = message.reply;
+                        // Tampilkan tanggal updated_at jika ada
+                        if (message.updated_at) {
+                            const date = new Date(message.updated_at);
+                            replyDate.textContent = 'Dibalas pada: ' + date.toLocaleString('id-ID', {
+                                day: 'numeric', month: 'long', year: 'numeric',
+                                hour: '2-digit', minute: '2-digit'
+                            });
+                        } else {
+                            replyDate.textContent = '';
+                        }
                         replyDisplayContainer.classList.remove('hidden');
                     } else {
                         replyDisplay.textContent = '';
+                        replyDate.textContent = '';
                         replyDisplayContainer.classList.add('hidden');
                     }
 

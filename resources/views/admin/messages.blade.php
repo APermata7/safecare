@@ -55,7 +55,7 @@
                 </div>
                 <div id="modalMessageFileContainer" class="hidden">
                     <p class="text-sm text-gray-500">Lampiran:</p>
-                    <a id="modalMessageFile" href="#" target="_blank" class="text-blue-600 hover:underline">Lihat Lampiran</a>
+                    <a id="modalMessageFile" href="#" target="_blank" class="text-primary-green hover:underline">Lihat Lampiran</a>
                 </div>
                 <div id="modalMessageReplyContainer" class="p-4 bg-gray-100 rounded-xl border border-gray-200">
                     <p class="text-sm text-gray-500">Balasan Admin:</p>
@@ -109,8 +109,9 @@
                                 <div class="p-4 border rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center hover:bg-gray-50 transition cursor-pointer" data-message-id="${message.id}">
                                     <div class="mb-2 sm:mb-0">
                                         <p class="font-bold text-gray-800">Subjek: ${message.judul}</p>
-                                        <p class="text-sm text-gray-500">Dari: ${message.user ? message.user.name : 'User Dihapus'} (${message.role})</p>
+                                        <p class="text-sm text-gray-800">Dari: ${message.user ? message.user.name : 'User Dihapus'} (${message.role})</p>
                                         <p class="text-sm text-gray-500">${new Date(message.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
+                                        <p class="text-sm text-gray-600">Dibalas pada: ${new Date(message.updated_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
                                         ${message.reply ?
