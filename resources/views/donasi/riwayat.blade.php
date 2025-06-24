@@ -1,29 +1,3 @@
-@php
-// Data Dummy ini dihapus atau dikomentari karena data akan datang dari controller
-/*
-$transaksis = collect([
-    (object)[
-        'pantiAsuhan' => (object)['nama_panti' => 'Panti Asuhan Kasih Bunda'],
-        'created_at' => now()->subDays(2),
-        'amount' => 50000,
-        'status' => 'done',
-    ],
-    (object)[
-        'pantiAsuhan' => (object)['nama_panti' => 'Rumah Yatim Al-Ikhlas'],
-        'created_at' => now()->subDays(5),
-        'amount' => 100000,
-        'status' => 'pending',
-    ],
-    (object)[
-        'pantiAsuhan' => (object)['nama_panti' => 'Panti Asuhan Bhakti Luhur'],
-        'created_at' => now()->subDays(10),
-        'amount' => 25000,
-        'status' => 'failed',
-    ],
-]);
-*/
-@endphp
-
 <x-app-layout>
     <div class="pt-24 sm:pt-4 pb-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8">
