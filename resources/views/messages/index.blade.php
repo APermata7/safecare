@@ -292,7 +292,6 @@
                                     <div class="mb-2 sm:mb-0">
                                         <p class="font-bold text-gray-800">Subjek: ${message.judul}</p>
                                         <p class="text-sm text-gray-500">${new Date(message.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
-                                        <p class="text-sm text-gray-600">Dibalas pada: ${new Date(message.updated_at).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' })}</p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
                                         ${message.reply ?
