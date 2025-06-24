@@ -1,5 +1,9 @@
 # 🏠 SafeCare
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/dd42d95d-4711-491c-8e85-0d8fb5b7d524" alt="SafeCare" width="500"/>
+</div>
+
 **SafeCare** adalah aplikasi **crowdfunding berbasis website** yang dirancang khusus untuk membantu **panti asuhan** menggalang dana secara online. Website ini menyediakan platform bagi **donatur** untuk memberikan donasi kepada panti asuhan melalui sistem pembayaran digital yang aman dan terpercaya.
 
 📌 **Note**: Aplikasi ini **tidak menggunakan teknologi blockchain**. Semua transaksi donasi dilakukan melalui **Midtrans Payment Gateway (Sandbox Mode)** sebagai simulasi pembayaran.
