@@ -61,7 +61,7 @@
                 <div class="flex items-center space-x-4">
                     @auth
                     @if(auth()->user()->role === 'admin')
-                    <a href="{{ route('admin') }}" class="text-sm font-medium text-gray-700 hover:text-primary-600 transition">Admin Panel</a>
+                    <a href="{{ route('admin') }}" class="text-sm font-medium text-gray-700 hover:text-primary-600 transition">Admin</a>
                     @endif
                     <a href="{{ route('dashboard') }}"
                     class="text-sm font-medium text-gray-700 hover:text-white hover:bg-primary-green transition px-3 py-1 rounded-md">
