@@ -129,7 +129,7 @@
                     } else {
                         transactionsListContainer.innerHTML = `
                             <div class="text-center py-12 border-2 border-dashed rounded-xl">
-                                <i class="fa-solid fa-money-bill-transfer text-5xl text-gray-300 mb-4"></i>
+                                <i class="fa-solid fa-exchange-alt text-5xl text-gray-300 mb-4"></i>
                                 <p class="text-gray-500">Belum ada transaksi.</p>
                             </div>
                         `;
