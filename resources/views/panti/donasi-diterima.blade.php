@@ -14,9 +14,9 @@
                 @endif
 
                 <div class="space-y-4">
+                    <h2 class="font-bold text-[20px] text-primary-green">Total Terkumpul: Rp{{ number_format($totalDonasi, 0, ',', '.') }}</h2>
+                    <hr>
                     @forelse($transaksis as $transaksi)
-                        <h2 class="font-bold text-[20px] text-primary-green">Total Terkumpul: Rp{{ number_format($totalDonasi, 0, ',', '.') }}</h2>
-                        <hr>
                         <div class="p-4 border rounded-xl flex justify-between items-center hover:bg-gray-50 transition">
                             <div>
                                 {{-- Pastikan relasi user sudah di-load --}}

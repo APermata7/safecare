@@ -120,12 +120,11 @@ class TransaksiController extends Controller
         }
 
         $transaksis = Transaksi::where('panti_id', $pantiAsuhanId)
-            ->where('status', 'success') // Hanya tampilkan donasi yang berhasil
             ->with('user') // Ambil data donatur terkait
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Hitung total donasi sukses
+        // Hitung total donasi sukses yang diterima oleh panti asuhan ini
         $totalDonasi = Transaksi::where('panti_id', $pantiAsuhanId)
             ->where('status', 'success')
             ->sum('amount');
