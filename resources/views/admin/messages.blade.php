@@ -58,8 +58,13 @@
                     <a id="modalMessageFile" href="#" target="_blank" class="text-primary-green hover:underline">Lihat Lampiran</a>
                 </div>
                 <div id="modalMessageReplyContainer" class="p-4 bg-gray-100 rounded-xl border border-gray-200">
-                    <p class="text-sm text-gray-500">Balasan Admin:</p>
-                    <p id="modalMessageReply" class="text-gray-700 whitespace-pre-line font-medium"></p>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">Balasan Admin:</p>
+                            <p id="modalMessageReply" class="text-gray-700 whitespace-pre-line font-medium"></p>
+                        </div>
+                        <p id="modalMessageReplyDate" class="text-sm text-gray-500"></p>
+                    </div>
                 </div>
 
                 <form id="replyForm" class="space-y-4">
@@ -78,7 +83,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -168,16 +172,34 @@
 
                     const replyDisplay = document.getElementById('modalMessageReply');
                     const replyDisplayContainer = document.getElementById('modalMessageReplyContainer');
+                    const replyDateDisplay = document.getElementById('modalMessageReplyDate');
+                    
                     if (message.reply) {
                         replyDisplay.textContent = message.reply;
                         replyDisplayContainer.classList.remove('hidden');
                         replyContentInput.value = message.reply; // Populate textarea if already replied
                         replyButton.textContent = 'Update Balasan';
+                        
+                        // Format the updated_at date
+                        if (message.updated_at) {
+                            const updatedDate = new Date(message.updated_at);
+                            const options = { 
+                                day: 'numeric', 
+                                month: 'long', 
+                                year: 'numeric', 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                            };
+                            replyDateDisplay.textContent = `Dibalas pada: ${updatedDate.toLocaleString('id-ID', options)}`;
+                        } else {
+                            replyDateDisplay.textContent = '';
+                        }
                     } else {
                         replyDisplay.textContent = '';
                         replyDisplayContainer.classList.add('hidden');
                         replyContentInput.value = '';
                         replyButton.textContent = 'Kirim Balasan';
+                        replyDateDisplay.textContent = '';
                     }
 
                     messageDetailModal.classList.remove('hidden');
